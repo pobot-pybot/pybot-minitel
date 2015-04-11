@@ -1,6 +1,6 @@
-``minitel.constants`` module
+``pynitel.constants`` module
 ============================
 
-.. automodule:: minitel.constants
+.. automodule:: pynitel.constants
     :members:
     :show-inheritance:

@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Minitel'
+project = u'PyNitel'
 copyright = u'2015, Eric Pascual'
 author = u'Eric Pascual'
 
@@ -232,7 +232,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'Minitel.tex', u'Minitel Documentation',
+  (master_doc, 'PyNitel.tex', u'PyNitel Documentation',
    u'Eric Pascual', 'manual'),
 ]
 
@@ -262,7 +262,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'minitel', u'Minitel Documentation',
+    (master_doc, 'pynitel', u'PyNitel Documentation',
      [author], 1)
 ]
 
@@ -276,8 +276,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'minital', u'Minitel Documentation',
-   author, 'Minitel', 'Simple Python library for communicating with a Minitel.',
+  (master_doc, 'pynitel', u'PyNitel Documentation',
+   author, 'PyNitel', 'Simple Python library for communicating with a Minitel.',
    'Miscellaneous'),
 ]
 

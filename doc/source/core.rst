@@ -1,6 +1,6 @@
-``minitel.core`` module
+``pynitel.core`` module
 =======================
 
-.. automodule:: minitel.core
+.. automodule:: pynitel.core
     :members:
     :show-inheritance:

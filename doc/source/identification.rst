@@ -1,6 +1,6 @@
-``minitel.identification`` module
+``pynitel.identification`` module
 =================================
 
-.. automodule:: minitel.identification
+.. automodule:: pynitel.identification
     :members:
     :show-inheritance:

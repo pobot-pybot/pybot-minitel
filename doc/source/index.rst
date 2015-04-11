@@ -1,8 +1,8 @@
 
-Welcome to Minitel library documentation!
+Welcome to PyNitel library documentation!
 =========================================
 
-A simple library for communication with Minitels.
+A simple library for communication with Minitels in Python.
 
 Based on :
 

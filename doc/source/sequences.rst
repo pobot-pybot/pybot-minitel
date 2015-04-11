@@ -1,6 +1,6 @@
-``minitel.sequences`` module
+``pynitel.sequences`` module
 ============================
 
-.. automodule:: minitel.sequences
+.. automodule:: pynitel.sequences
     :members:
     :show-inheritance:
