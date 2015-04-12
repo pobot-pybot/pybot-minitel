@@ -34,8 +34,9 @@ Contents
    :maxdepth: 3
 
    core
-   identification
+   forms
    sequences
+   identification
    constants
 
 Indices and tables
