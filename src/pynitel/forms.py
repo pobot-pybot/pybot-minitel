@@ -24,6 +24,12 @@ class Form(object):
 
     For convenience, the :py:meth:`dump_definition` does the reverse operation, which
     allows producing the JSON data directly from the current definition of the form.
+
+    Warning:
+        The class is intended to be used in Videotex mode. Maybe it works fine in
+        Teleinfo mode too, but it has not been tested. By the way, to ensure all
+        goes well, the Minitel is switched in Videotex mode when rendering forms.
+
     """
     def __init__(self, mt):
         """
@@ -43,9 +49,10 @@ class Form(object):
     def add_prompt(self, x, y, text):
         """ Adds a fixed text to the form, at a given position.
 
-        :param int x: X coordinate of the prompt start position
-        :param int y: Y coordinate of the prompt start position
-        :param str text: the prompt text (can include an attributes sequence)
+        Parameters:
+            x (int): X coordinate of the prompt start position
+            y (int): Y coordinate of the prompt start position
+            text (str): the prompt text (can include an attributes sequence)
         """
         self._prompts.append(PromptDefinition(x, y, text))
         self._prepared = False
@@ -53,11 +60,12 @@ class Form(object):
     def add_field(self, name, x, y, size, marker='.'):
         """ Adds a field to the form, at a given position and with a given size.
 
-        :param str name: the field name
-        :param int x: X coordinate of the prompt start position
-        :param int y: Y coordinate of the prompt start position
-        :param int size: the field size
-        :param char marker: the character used to mark the fields area (default: '.')
+        Parameters:
+            name (str): the field name
+            x (int): X coordinate of the prompt start position
+            y (int): Y coordinate of the prompt start position
+            size (int): the field size
+            marker (char): the character used to mark the fields area (default: '.')
         """
         self._fields[name] = FieldDefinition(x, y, size, marker or '.')
         self._prepared = False
@@ -90,8 +98,14 @@ class Form(object):
 
         Should normally be invoked before calling :py:meth:`input`.
 
-        :param dict content: optional dictionary containing the initial field values
+        Warning:
+            The Minitel is switched in Videotex mode before processing.
+
+        Parameters:
+            content (dict): optional dictionary containing the initial field values
         """
+        self._mt.set_mode(Minitel.VIDEOTEX)
+
         content = content or {}
 
         self.prepare()
@@ -105,14 +119,35 @@ class Form(object):
             self._mt.display_text(value.ljust(field.size, field.marker), field.x, field.y)
 
     def input(self, content=None):
-        """ Handles user interactions and return the fields content if submitted.
+        """ Handles user interactions and return the fields content if the form is submitted.
 
-        The form is submitted when the 'ENVOI' (SEND) key is hit. It is canceled when hitting the
-        'SOMMAIRE' (CONTENT) key.
+        The cursor is made visible on start, and hidden back when exiting.
 
-        :param dict content: optional dictionary containing the initial field values
-        :return: the fields content if the form has been submitted, None otherwise.
-        :rtype: dict
+        Special keys are interpreted as follows :
+
+            ``ENVOI`` (SEND)
+                submits the form, returning the fields content as a dictionary
+
+            ``SOMMAIRE`` (CONTENT)
+                cancels and returns None
+
+            ``RETOUR`` (BACK)
+                jumps to the previous field (or to the last one if current on the first one)
+
+            ``SUITE`` (NEXT)
+                jumps to the next field (or to the first one if current on the last one)
+
+            ``CORRECTION``
+                backspaces one character in the field
+
+            ``ANNULATION`` (CANCEL)
+                clears the field
+
+        Parameters:
+            content (dict): optional dictionary containing the initial field values
+
+        Returns:
+            dict: the fields content if the form has been submitted, None otherwise.
         """
         content = content or {}
 
@@ -156,8 +191,11 @@ class Form(object):
         Refer to :py:meth:`dump_definition` documentation for the structure
         specifications.
 
-        :param str data: the form definition in JSON format
-        :raise ValueError: if no data or invalid JSON data provided
+        Parameters:
+            data (str): the form definition in JSON format
+
+        Raises:
+            ValueError: if no data or invalid JSON data provided
         """
         if not data:
             raise ValueError('no definition provided')
@@ -169,7 +207,7 @@ class Form(object):
 
             for prompt_def in defs['prompts']:
                 x, y, text = prompt_def
-                self.add_prompt(int(x), int(y), str(text))
+                self.add_prompt(int(x), int(y), text)
 
             for field_name, field_def in defs['fields'].iteritems():
                 x, y, size, marker = (field_def + ['.'])[:4]
@@ -182,7 +220,24 @@ class Form(object):
     def dump_definition(self):
         """ Returns the form current definition as a JSON formatted structure.
 
-        The structure is a dictionary such as : ::
+        The returned structure is a dictionary, containing the two top-level entries ``prompts``
+        and ``fields``.
+
+        The value of the ``prompts`` entry is a list of tuples, composed of :
+
+            - the X position
+            - the Y position
+            - the prompt text
+
+        The value of the ``fields`` entry is a sub-dictionary, keyed by the field names, and which
+        values are tuples, composed of :
+
+            - the X position
+            - the Y position
+            - the size (in characters)
+            - the marker character (defaulted to ``.`` if not included)
+
+        Example: ::
 
             {
                 "prompts": [
@@ -196,23 +251,8 @@ class Form(object):
                 }
             }
 
-        The prompt definitions are tuples, containing in sequence :
-
-            - the X position
-            - the Y position
-            - the text
-
-        The field definitions are tuples, containing in sequence :
-
-            - the X position
-            - the Y position
-            - the size (in characters)
-            - the marker character (defaulted to ``.`` if not included)
-
-        They are packed in a dictionary keyed by the field name.
-
-        :return: JSON form definition
-        :rtype: str
+        Returns:
+            str: JSON form definition
         """
         data = {
             'prompts': self._prompts,

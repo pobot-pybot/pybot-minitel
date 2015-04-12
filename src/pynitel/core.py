@@ -29,7 +29,8 @@ def dump(data):
 class Minitel(object):
     """ Represents a Minitel beast.
 
-    .. warning:: tested only with a Philips Minitel 2
+    Warning:
+        tested only with a Philips Minitel 2
     """
     VIDEOTEX, MIXED, TELEINFO = range(3)
 
@@ -53,15 +54,18 @@ class Minitel(object):
         or an instance of :py:class:`serial.Serial`. In this case, the port is automatically
         opened if not yet done.
 
-        .. warning:: When providing a port instance, beware to have it initialized
+        Warning:
+            When providing a port instance, beware to have it initialized
             with even parity and 7 data bytes.
 
-        :param port: serial port identification or serial port instance
-        :type port: str or :py:class:`serial.Serial`
-        :param int baud: baud rate (default: 4800)
-        :param bool debug: if True, communications are traced
-        :raises ValueError: if port is not specified.
-        :raises TypeError: if the port type is not one of the expected ones
+        Parameters:
+            port (str or :py:class:`serial.Serial`): serial port identification or serial port instance
+            baud (int): baud rate (default: 4800)
+            debug (bool): if True, communications are traced
+
+        Raises:
+            ValueError: if port is not specified.
+            TypeError: if the port type is not one of the expected ones
         """
         if not port:
             raise ValueError('port parameter is mandatory')
@@ -148,17 +152,23 @@ class Minitel(object):
         :param str data: the data to be sent
         """
         if data:
-            log_tx.debug(dump(data))
-            self.ser.write(data)
+            encoded = ''.join([
+                U_TO_VT.get(c, c) for c in data
+            ])
+            if log_tx.isEnabledFor(logging.DEBUG):
+                log_tx.debug(dump(encoded))
+            self.ser.write(encoded.encode('utf-8'))
 
     def receive(self, count=1):
         """ Receives a given count of bytes from the Minitel.
 
         Does not wait for data, but returns whats is currently available.
 
-        :param int count: the expected count of bytes (default: 1)
-        :return: the received bytes
-        :rtype: str
+        Parameters:
+            count (int): the expected count of bytes (default: 1)
+
+        Returns:
+            str: the received bytes
         """
         data = self.ser.read(count)
         if data:
@@ -168,14 +178,17 @@ class Minitel(object):
     def request(self, command, reply_size):
         """ Sends a request and returns its reply.
 
-        .. warning:: The serial input link is flushed before issuing the request to be sure
+        Warning:
+            The serial input link is flushed before issuing the request to be sure
             that the returned value will not contain data remaining from previous
             communications. This means that such data will be lost.
 
-        :param str command: the command to be sent
-        :param int reply_size: the size of the expected reply
-        :return: the reply
-        :rtype: str
+        Parameters:
+            command (str): the command to be sent
+            reply_size (int): the size of the expected reply
+
+        Returns:
+            str: the reply
         """
         if Protocol.is_protocol_command(command) and not self._in_vt_mode:
             raise RuntimeError('protocol commands available in Videotex mode only')
@@ -190,8 +203,8 @@ class Minitel(object):
         """ Reads the content of the identification ROM and returns it in a
         decoded form.
 
-        :return: the decoded identification ROM
-        :rtype: :py:class:`DeviceSpecs`
+        Returns:
+            :py:class:`DeviceSpecs`: the decoded identification ROM
         """
         self.ser.flushInput()
         self.send(Protocol.ENQROM)
@@ -208,7 +221,8 @@ class Minitel(object):
         Tries to probe the device. If it is not in Videotex, the Protocol
         module is not here, and we will get no reply.
 
-        :return: True if in Videotex mode, False otherwise
+        Returns:
+            bool: True if in Videotex mode, False otherwise
         """
         return self.probe() is not None
 
@@ -217,8 +231,8 @@ class Minitel(object):
 
         Teleinfo link speeds are symmetrical, so both values should be the same.
 
-        :return: send/received baudrates
-        :rtype: tuple
+        Returns:
+            tuple: send/received baudrates
         """
         data = ord(self.request(Protocol.STATUS_SPEED, Protocol.PRO2_LEN)[-1])
         send_speed = LinkSpeed.baudrate((data >> 3) & 7)
@@ -234,8 +248,11 @@ class Minitel(object):
         The provided value is automatically interpreted as a speed code or a baudrate if
         it is a valid value for both cases. See :py:class:`LinkSpeed` for details.
 
-        :param int speed: baudrate or speed code
-        :raise ValueError: if an invalid speed is provided
+        Parameters:
+            speed (int): baudrate or speed code
+
+        Raises:
+            ValueError: if an invalid speed is provided
         """
         speed_code = LinkSpeed.code(speed)
         prog_value = 0x40 | (speed_code << 3) | speed_code
@@ -248,9 +265,12 @@ class Minitel(object):
     def set_mode(self, mode, force=False):
         """ Sets the Minitel mode.
 
-        :param int mode: the operating mode, selected among ``VIDEOTEX``, ``MIXED`` and ``TELEINFO``
-        :param bool force: if True, the command is issued whatever is the current mode
-        :raises ValueError: if a wrong mode is passed
+        Parameters:
+            mode (int): the operating mode, selected among ``VIDEOTEX``, ``MIXED`` and ``TELEINFO``
+            force (bool): if True, the command is issued whatever is the current mode
+
+        Raises:
+            ValueError: if a wrong mode is passed
         """
         if mode == self.mode and not force:
             return
@@ -274,7 +294,9 @@ class Minitel(object):
 
     def videotex_graphic_mode(self, activate=True):
         """ Switches Videotex mode between graphics and text
-        :param bool activate: True (default) to activate graphics mode
+
+        Parameters:
+            activate (bool): True (default) to activate graphics mode
         """
         if self._in_vt_mode:
             if activate != self._vt_graphics:
@@ -284,8 +306,8 @@ class Minitel(object):
     def get_functional_status(self):
         """ Returns the current settings of the modules.
 
-        :return: caps lock state, roll mode, screen width
-        :rtype: tuple
+        Returns:
+            tuple: caps lock state, roll mode, screen width
         """
         data = ord(self.request(Protocol.STATUS, Protocol.PRO2_LEN)[-1])
         caps_lock = (data & 0x08) == 0
@@ -296,8 +318,8 @@ class Minitel(object):
     def is_w80(self):
         """ Tells if the screen is currently in 80 chars width.
 
-        :return: is large screen currently active
-        :rtype: bool
+        Returns:
+            bool: is large screen currently active
         """
         if self.mode == self.TELEINFO:
             return True
@@ -308,9 +330,12 @@ class Minitel(object):
     def set_char_size(self, width=1, height=1):
         """ Defines the size (width and height) of the characters in Videotex mode.
 
-        :param int width: character width (1 or 2)
-        :param int height: character height (1 or 2)
-        :raise ValueError: if not in Videotex mode or in invalid width or height
+        Parameters:
+            width (int): character width (1 or 2)
+            height (int): character height (1 or 2)
+
+        Raises:
+            ValueError: if not in Videotex mode or in invalid width or height
         """
         if not self._in_vt_mode:
             raise ValueError('not in Videotex mode')
@@ -347,8 +372,11 @@ class Minitel(object):
     def set_charset(self, num=0):
         """ Activates the charset (i.e. Gn) to be used for subsequent text display.
 
-        :param int num: the charset num (in range [0, 2])
-        :raise ValueError: if passed number is out of range
+        Parameters:
+            num (int): the charset num (in range [0, 2])
+
+        Raises:
+            ValueError: if passed number is out of range
         """
         try:
             self.send((SI, SO, SS2)[num])
@@ -358,8 +386,11 @@ class Minitel(object):
     def clear_screen(self, part=Part.ALL):
         """ Clears (a part of) the screen.
 
-        :param int part: which part should be cleared (among ``PART_xxx`` constants)
-        :raise ValueError: if part code is invalid
+        Parameters:
+            part (int): which part should be cleared (among ``PART_xxx`` constants)
+
+        Raises:
+            ValueError: if part code is invalid
         """
         self.send(CSI + '%dJ' % Part.check(part))
         time.sleep(0.1)     # needs some time to complete
@@ -384,8 +415,11 @@ class Minitel(object):
     def clear_line(self, part=Part.ALL):
         """ Clears (a part of) the current line.
 
-        :param int part: which part should be cleared (among :py:class:``Part`` pre-defined constants)
-        :raise ValueError: if part code is invalid
+        Parameters:
+            part (int): which part should be cleared (among :py:class:``Part`` pre-defined constants)
+
+        Raises:
+            ValueError: if part code is invalid
         """
         self.send(CSI + '%dK' % Part.check(part))
 
@@ -404,12 +438,15 @@ class Minitel(object):
 
     def rlinput(self, max_length=40, marker=' ', start_pos=None, initial_value=None):
         """ User input with basic Gnu's readline features
-        :param int max_length: max length of the input
-        :param str marker: the char to be used as the input area filler
-        :param tuple start_pos: input area start position (default: current one)
-        :param str initial_value: the value of the input on entry
-        :return: the entered value and the key used to terminate the entry
-        :rtype: tuple
+
+        Parameters:
+            max_length (int): max length of the input
+            marker (str): the char to be used as the input area filler
+            start_pos (tuple): input area start position (default: current one)
+            initial_value(str): the value of the input on entry
+
+        Returns:
+            tuple: the entered value and the key used to terminate the entry
         """
         initial_value = initial_value or ''
         chars = list(initial_value)
@@ -468,13 +505,16 @@ class Minitel(object):
 
         Handles common editing actions, such as backspace and clear input.
 
-        .. warning:: The serial link is flushed before waiting for the input.
+        Warning:
+            The serial link is flushed before waiting for the input.
 
-        :param int max_length: maximum length of entered text
-        :param tuple prompt: optional prompt to display, as a (text, width, x, y) tuple
-        :param tuple input_start_xy: x, y coordinates for input area start. If None, use the current position
-        :return: the entered value and the key used to terminate the entry
-        :rtype: tuple
+        Parameters:
+            max_length (int): maximum length of entered text
+            prompt (tuple): optional prompt to display, as a (text, width, x, y) tuple
+            input_start_xy (tuple): x, y coordinates for input area start. If None, use the current position
+
+        Returns:
+            tuple: the entered value and the key used to terminate the entry
         """
         if prompt:
             text, prompt_width, prompt_x, prompt_y = prompt
@@ -497,9 +537,12 @@ class Minitel(object):
     def wait_for_key(self, key_set=(SEP + KeyCode.SEND,), max_wait=None):
         """ Waits for the user to type any key in the provided set.
 
-        :param iterable key_set: the list of the codes of the accepted keys
-        :param int max_wait: maximum wait time in seconds (if None, waits indefinitely)
-        :return: the hit key, or None if nothing accepted has been typed in the given delay
+        Parameters:
+            key_set (iterable): the list of the codes of the accepted keys
+            max_wait (int): maximum wait time in seconds (if None, waits indefinitely)
+
+        Returns:
+            char: the hit key, or None if nothing accepted has been typed in the given delay
         """
         special_keys = set((seq[1] for seq in key_set if len(seq) > 1))
         normal_keys = set(key_set) - special_keys
@@ -535,14 +578,16 @@ class Minitel(object):
 
         The charset to be used can be customised.
 
-        .. seealso:: :py:meth:`set_charset`
+        See Also:
+            :py:meth:`set_charset`
 
-        :param str text: the text to be displayed
-        :param int x: horizontal position
-        :param int y: vertical position
-        :param bool clear_eol: if True the target line is cleared after the end of the displayed text
-        :param bool clear_bol: if True the target line is cleared before the start end of the displayed text
-        :param int charset: the charset to be used
+        Parameters:
+            text (str): the text to be displayed
+            x (int): horizontal position
+            y (int): vertical position
+            clear_eol (bool): if True the target line is cleared after the end of the displayed text
+            clear_bol (bool): if True the target line is cleared before the start end of the displayed text
+            charset (int): the charset to be used
         """
         self.goto_xy(x, y)
         self.set_charset(charset)
@@ -555,9 +600,12 @@ class Minitel(object):
     def display_status(self, text, x=0):
         """ Displays a text in the status line.
 
-        :param str text: the text to display
-        :param int x: the horizontal position in [0, 39] (default: 0)
-        :raise ValueError: if horizontal position is invalid
+        Parameters:
+            text (str): the text to display
+            x (int): the horizontal position in [0, 39] (default: 0)
+
+        Raises:
+            ValueError: if horizontal position is invalid
         """
         if self._in_vt_mode:
             if 0 <= x < 40:
@@ -569,7 +617,8 @@ class Minitel(object):
 
     def activate_echo(self, activate=True):
         """ Activates or deactivates the local echo
-        :param bool activate: True for local echo activation, False otherwise
+        Parameters:
+            activate (bool): True for local echo activation, False otherwise
         """
         if self._in_vt_mode:
             self.send(
@@ -583,9 +632,12 @@ class Minitel(object):
     def goto_xy(self, x, y):
         """ Moves the cursor to the given 0 based coordinates.
 
-        :param int x: X (col) position
-        :param int y: Y (line) position
-        :raise ValueError: if coordinates are outside valid ranges
+        Parameters:
+            x (int): X (col) position
+            y (int): Y (line) position
+
+        Raises:
+            ValueError: if coordinates are outside valid ranges
         """
         if not 0 <= y <= Y_MAX:
             raise ValueError('invalid Y position (%d)' % y)
@@ -610,8 +662,8 @@ class Minitel(object):
     def get_cursor_position(self):
         """ Returns the current cursor position.
 
-        :return: X, Y coordinates as a tuple
-        :rtype: tuple
+        Returns:
+            tuple: X, Y coordinates as a tuple
         """
         _, y, x = self.request(GET_POS, 3)
         return ord(x) - 65, ord(y) - 65
@@ -621,7 +673,8 @@ class Minitel(object):
 
         Ignored if not in Videotex mode.
 
-        :param bool on: True for showing the caret, False to hide it
+        Parameters:
+            on (bool): True for showing the caret, False to hide it
         """
         if self._in_vt_mode:
             if on:
@@ -634,9 +687,12 @@ class Minitel(object):
 
         The color is translated to a gray level on a monochrome Minitel.
 
-        :param int fg: foreground color (if None, don't change it)
-        :param int bg: background color (if None, don't change it)
-        :raises: ValueError if color is out of range
+        Parameters:
+            fg (int): foreground color (if None, don't change it)
+            bg (int): background color (if None, don't change it)
+
+        Raises:
+            ValueError if color is out of range
         """
         seq = ''
         if fg is not None and fg != self.fg:

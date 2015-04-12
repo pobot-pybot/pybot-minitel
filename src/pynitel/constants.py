@@ -23,6 +23,21 @@ CSI = ESC + '['
 
 Y_MAX = 23
 
+# Sequences table for special characters not present in default Videotex charset
+U_TO_VT = {
+    u'£': '\x19\x23', u'°': '\x19\x30', u'±': '\x19\x31',
+    u'←': '\x19\x2C', u'↑': '\x19\x2D', u'→': '\x19\x2E', u'↓': '\x19\x2F',
+    u'¼': '\x19\x3C', u'½': '\x19\x3D', u'¾': '\x19\x3E',
+    u'ç': '\x19\x4B\x63', u'’': '\x19\x4B\x27',
+    u'à': '\x19\x41\x61', u'á': '\x19\x42\x61', u'â': '\x19\x43\x61', u'ä': '\x19\x48\x61',
+    u'è': '\x19\x41\x65', u'é': '\x19\x42\x65', u'ê': '\x19\x43\x65', u'ë': '\x19\x48\x65',
+    u'ì': '\x19\x41\x69', u'í': '\x19\x42\x69', u'î': '\x19\x43\x69', u'ï': '\x19\x48\x69',
+    u'ò': '\x19\x41\x6F', u'ó': '\x19\x42\x6F', u'ô': '\x19\x43\x6F', u'ö': '\x19\x48\x6F',
+    u'ù': '\x19\x41\x75', u'ú': '\x19\x42\x75', u'û': '\x19\x43\x75', u'ü': '\x19\x48\x75',
+    u'Œ': '\x19\x6A', u'œ': '\x19\x7A',
+    u'ß': '\x19\x7B', u'β': '\x19\x7B'
+}
+
 
 class KeyCode(object):
     """ The codes sent by the special keys in **Videotex mode**.
