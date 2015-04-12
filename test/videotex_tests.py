@@ -176,7 +176,7 @@ class Runner(object):
     def test_form_load_def(self, mt):
         form = Form(mt)
         script_path = os.path.dirname(__file__)
-        with file(os.path.join(script_path, 'fixtures/form_def.json'), 'rt') as fp:
+        with file(os.path.join(script_path, 'fixtures/form_def.json'), 'rb') as fp:
             form.load_definition(fp.read())
 
         content = form.render_and_input()
