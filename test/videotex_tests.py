@@ -205,19 +205,19 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '-p', '--port',
-        help='device port',
+        help='device port (default: /dev/ttyUSB0)',
         default='/dev/ttyUSB0'
     )
     parser.add_argument(
         '-b', '--baud',
-        help='baud rate',
+        help='baud rate (default: 9600)',
         type=int,
         choices=(1200, 4800, 9600),
         default=9600
     )
     parser.add_argument(
         '-d', '--debug',
-        help='debug flag',
+        help='activates debug trace',
         action='store_true'
     )
 
