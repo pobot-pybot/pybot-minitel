@@ -8,6 +8,7 @@ import inspect
 import textwrap
 import logging
 import time
+import os
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,6 +16,7 @@ logging.basicConfig(
 )
 
 import pynitel
+from pynitel.forms import Form
 
 
 class NoSuchTestError(Exception):
@@ -82,7 +84,6 @@ class Runner(object):
     def test_image(self, mt):
         """ image display test
         """
-        import os
         mt.clear_screen()
         script_path = os.path.dirname(__file__)
         with file(os.path.join(script_path, 'fixtures/pobot.vt'), 'rb') as fp:
@@ -149,6 +150,37 @@ class Runner(object):
             speed, caps_lock, roll, width
         ))
 
+    def test_form(self, mt):
+        form = Form(mt)
+        form.add_prompt(0, 2, 'First name')
+        form.add_prompt(0, 4, 'Last name')
+        form.add_prompt(30, 23, 'ENVOI')
+
+        form.add_field('fname', 15, 2, 20)
+        form.add_field('lname', 15, 4, 20)
+
+        content = form.render_and_input({'fname': 'Eric'})
+        print('form content: %s' % content)
+
+    def test_form_dump_def(self, mt):
+        form = Form(mt)
+        form.add_prompt(0, 2, 'First name')
+        form.add_prompt(0, 4, 'Last name')
+        form.add_prompt(30, 23, 'ENVOI')
+
+        form.add_field('fname', 15, 2, 20)
+        form.add_field('lname', 15, 4, 20)
+
+        print(form.dump_definition())
+
+    def test_form_load_def(self, mt):
+        form = Form(mt)
+        script_path = os.path.dirname(__file__)
+        with file(os.path.join(script_path, 'fixtures/form_def.json'), 'rt') as fp:
+            form.load_definition(fp.read())
+
+        content = form.render_and_input()
+        print('form content: %s' % content)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
