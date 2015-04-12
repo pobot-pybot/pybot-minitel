@@ -402,25 +402,39 @@ class Minitel(object):
     def beep(self):
         self.send(BEL)
 
-    def rlinput(self, max_length=40, marker=' '):
-        """ User input with basic Gnus readline features
+    def rlinput(self, max_length=40, marker=' ', start_pos=None, initial_value=None):
+        """ User input with basic Gnu's readline features
         :param int max_length: max length of the input
-        :param char marker: the char to be used as the input area filler
-        :return: the entered value
+        :param str marker: the char to be used as the input area filler
+        :param tuple start_pos: input area start position (default: current one)
+        :param str initial_value: the value of the input on entry
+        :return: the entered value and the key used to terminate the entry
+        :rtype: tuple
         """
-        chars = []
+        initial_value = initial_value or ''
+        chars = list(initial_value)
         self.ser.flushInput()
-        x0, y0 = self.get_cursor_position()
-        self.send(marker * max_length)
-        self.goto_xy(x0, y0)
+
+        # define the field starting position
+        if start_pos:
+            x0, y0 = start_pos
+            self.goto_xy(x0, y0)
+        else:
+            x0, y0 = self.get_cursor_position()
+
+        # display the initial content (if any) and put the cursor after it
+        self.send(initial_value.ljust(max_length, marker))
+        self.goto_xy(x0 + len(initial_value), y0)
+
+        # handle user typed keys
         while True:
             c = self.receive()
             if c:
                 if c == SEP:
                     c = self.receive()
-                    if c == KeyCode.SEND:
+                    if c in (KeyCode.SEND, KeyCode.NEXT, KeyCode.PREV, KeyCode.CONTENT):
                         break
-                    elif c == KeyCode.CORREC:
+                    elif c == KeyCode.CORRECTION:
                         if chars:
                             del chars[-1]
                             self.send(BS + marker + BS)
@@ -428,10 +442,10 @@ class Minitel(object):
                             self.beep()
                     elif c == KeyCode.CANCEL:
                         if chars:
-                            self.goto_xy(x0, y0)
-                            self.send(marker * len(chars))
-                            self.goto_xy(x0, y0)
                             chars = []
+                            self.goto_xy(x0, y0)
+                            self.send(marker * max_length)
+                            self.goto_xy(x0, y0)
                         else:
                             self.beep()
                     else:
@@ -442,12 +456,12 @@ class Minitel(object):
                         self.send(c)
                     else:
                         self.beep()
-                elif c == '\x0d':
+                elif c == CR:
                     break
                 else:
                     self.beep()
 
-        return ''.join(chars)
+        return ''.join(chars), c
 
     def input(self, max_length=40, prompt=None, input_start_xy=None, marker=' '):
         """ Get a user input from the Minitel.
@@ -459,6 +473,8 @@ class Minitel(object):
         :param int max_length: maximum length of entered text
         :param tuple prompt: optional prompt to display, as a (text, width, x, y) tuple
         :param tuple input_start_xy: x, y coordinates for input area start. If None, use the current position
+        :return: the entered value and the key used to terminate the entry
+        :rtype: tuple
         """
         if prompt:
             text, prompt_width, prompt_x, prompt_y = prompt
@@ -473,10 +489,10 @@ class Minitel(object):
 
         self.goto_xy(x, y)
         self.show_cursor()
-        value = self.rlinput(max_length=max_length, marker=marker)
+        value, key = self.rlinput(max_length=max_length, marker=marker)
         self.show_cursor(False)
         self.send(' ' * (max_length - len(value)))
-        return value
+        return value, key
 
     def wait_for_key(self, key_set=(SEP + KeyCode.SEND,), max_wait=None):
         """ Waits for the user to type any key in the provided set.
@@ -582,6 +598,9 @@ class Minitel(object):
             if not 0 <= x < 80:
                 raise ValueError('invalid X position (%d)' % x)
             self.send(TeleinfoCommand.CUP % (y, x))
+
+        # seems to need some time to execute
+        time.sleep(0.1)
 
     def cursor_home(self):
         """ Moves the cursor to the top-left corner of the screen.
