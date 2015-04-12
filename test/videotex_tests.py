@@ -64,7 +64,7 @@ class Runner(object):
                     mt.close()
 
     def test_display_attrs(self, mt):
-        """ display attributes test
+        """ displays text with various attributes
 
         :param minitel.Minitel mt: the Minitel instance
         """
@@ -86,16 +86,7 @@ class Runner(object):
         time.sleep(10)
 
     def test_image(self, mt):
-        """ image display test
-        """
-        mt.clear_screen()
-        with file(os.path.join(self.script_path, 'fixtures/pobot-logo-small.vt'), 'rb') as fp:
-            mt.send(fp.read())
-        mt.display_text('ENVOI', 34, 23)
-        mt.wait_for_key(max_wait=10)
-
-    def test_image_convert(self, mt):
-        """ image conversion test
+        """ converts and display an image
         """
         img = Image.open(os.path.join(self.script_path, 'fixtures/pobot-logo-small.png'))
         vt_img = VideotexImage(img)
@@ -109,7 +100,7 @@ class Runner(object):
         mt.wait_for_key(max_wait=10)
 
     def test_input(self, mt):
-        """ user input test
+        """ gets a user input
         """
         prompt_x, prompt_y = (0, 3)
         input_value = mt.input(max_length=10, prompt=('Enter your name', 20, prompt_x, prompt_y), marker='.')
