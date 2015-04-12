@@ -35,6 +35,7 @@ Contents
 
    core
    forms
+   image
    sequences
    identification
    constants

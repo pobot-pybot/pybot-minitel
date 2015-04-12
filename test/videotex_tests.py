@@ -10,6 +10,8 @@ import logging
 import time
 import os
 
+from PIL import Image
+
 logging.basicConfig(
     level=logging.INFO,
     format="[%(levelname).1s] %(name)s: %(message)s"
@@ -17,6 +19,7 @@ logging.basicConfig(
 
 import pynitel
 from pynitel.forms import Form
+from pynitel.image import VideotexImage
 
 
 class NoSuchTestError(Exception):
@@ -27,13 +30,14 @@ class Runner(object):
     @classmethod
     def get_tests_list(cls):
         return (
-            (n[5:], m.__doc__.strip().split('\n')[0])
+            (n[5:], m.__doc__.strip().split('\n')[0] if m.__doc__ else "(no description)")
             for n, m in inspect.getmembers(cls, inspect.ismethod)
             if n.startswith('test_')
         )
 
     def __init__(self, cli_args):
         self._args = cli_args
+        self.script_path = os.path.dirname(__file__)
 
     def run_test(self, test_name):
         method_name = 'test_' + test_name
@@ -85,9 +89,22 @@ class Runner(object):
         """ image display test
         """
         mt.clear_screen()
-        script_path = os.path.dirname(__file__)
-        with file(os.path.join(script_path, 'fixtures/pobot.vt'), 'rb') as fp:
+        with file(os.path.join(self.script_path, 'fixtures/pobot-logo-small.vt'), 'rb') as fp:
             mt.send(fp.read())
+        mt.display_text('ENVOI', 34, 23)
+        mt.wait_for_key(max_wait=10)
+
+    def test_image_convert(self, mt):
+        """ image conversion test
+        """
+        img = Image.open(os.path.join(self.script_path, 'fixtures/pobot-logo-small.png'))
+        vt_img = VideotexImage(img)
+        code = vt_img.to_videotex()
+
+        mt.videotex_graphic_mode()
+        mt.clear_screen()
+        mt.send(code)
+
         mt.display_text('ENVOI', 34, 23)
         mt.wait_for_key(max_wait=10)
 
@@ -104,6 +121,8 @@ class Runner(object):
         time.sleep(10)
 
     def test_status_line(self, mt):
+        """ displays text on the status (top most) line
+        """
         mt.display_status(mt.text_style_sequence(inverse=True) + "I'm in status line".ljust(40))
         mt.display_text("And I'm in normal area")
         time.sleep(10)
@@ -151,6 +170,8 @@ class Runner(object):
         ))
 
     def test_form(self, mt):
+        """ displays a hard-coded form
+        """
         form = Form(mt)
         form.add_prompt(0, 2, 'First name')
         form.add_prompt(0, 4, 'Last name')
@@ -163,6 +184,8 @@ class Runner(object):
         print('form content: %s' % content)
 
     def test_form_dump_def(self, mt):
+        """ generates the JSON representation of a form
+        """
         form = Form(mt)
         form.add_prompt(0, 2, 'First name')
         form.add_prompt(0, 4, 'Last name')
@@ -174,9 +197,10 @@ class Runner(object):
         print(form.dump_definition())
 
     def test_form_load_def(self, mt):
+        """ loads a form from its JSON representation and displays it
+        """
         form = Form(mt)
-        script_path = os.path.dirname(__file__)
-        with file(os.path.join(script_path, 'fixtures/form_def.json'), 'rb') as fp:
+        with file(os.path.join(self.script_path, 'fixtures/form_def.json'), 'rt') as fp:
             form.load_definition(fp.read())
 
         content = form.render_and_input()
