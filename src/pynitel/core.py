@@ -292,14 +292,15 @@ class Minitel(object):
                 self.videotex_graphic_mode(False)
                 self.activate_echo(False)
 
-    def videotex_graphic_mode(self, activate=True):
+    def videotex_graphic_mode(self, activate=True, force=False):
         """ Switches Videotex mode between graphics and text
 
         Parameters:
             activate (bool): True (default) to activate graphics mode
+            force (bool): True to ignore current mode and send the appropriate sequence anyway
         """
         if self._in_vt_mode:
-            if activate != self._vt_graphics:
+            if force or activate != self._vt_graphics:
                 self.send(VideotexMode.GRAPHICS if activate else VideotexMode.TEXT)
                 self._vt_graphics = activate
 
@@ -339,12 +340,29 @@ class Minitel(object):
         """
         if not self._in_vt_mode:
             raise ValueError('not in Videotex mode')
+
+        self.send(self.char_size_sequence(width=width, height=height))
+
+    def char_size_sequence(self, width=1, height=1):
+        """ Returns the sequence for changing the size (width and height) of the characters
+        in Videotex mode.
+
+        Parameters:
+            width (int): character width (1 or 2)
+            height (int): character height (1 or 2)
+
+        Returns:
+            str: the sequence
+
+        Raises:
+            ValueError: if invalid width or height
+        """
         if width not in [1, 2]:
             raise ValueError('invalid width')
         if height not in [1, 2]:
             raise ValueError('invalid height')
 
-        self.send('\x1b' + chr(0x4c + (height - 1) + (width - 1) * 2))
+        return '\x1b' + chr(0x4c + (height - 1) + (width - 1) * 2)
 
     def set_text_style(self, blink=None, inverse=None, underscore=None, bright=None):
         """ Sets the attributes for subsequently displayed text.
@@ -570,16 +588,16 @@ class Minitel(object):
             # no need to eat CPU cycles since the user will not type at light speed ;)
             time.sleep(0.1)
 
-    def display_text(self, text, x=0, y=0, clear_eol=False, clear_bol=False, charset=0):
+    def display_text(self, text, x=0, y=0, clear_eol=False, clear_bol=False, charset=0, char_width=1, char_height=1):
         """ Displays a text at a given position of the screen, with various options.
 
         The ``clear_xxx`` options provide convenient way to clear parts of the target
         line while displaying the text.
 
-        The charset to be used can be customised.
+        The charset to be used can be customised. Same for the character size.
 
         See Also:
-            :py:meth:`set_charset`
+            :py:meth:`set_charset`, :py:meth:`char_size_sequence`
 
         Parameters:
             text (str): the text to be displayed
@@ -588,14 +606,20 @@ class Minitel(object):
             clear_eol (bool): if True the target line is cleared after the end of the displayed text
             clear_bol (bool): if True the target line is cleared before the start end of the displayed text
             charset (int): the charset to be used
+            width (int): character width (1 or 2)
+            height (int): character height (1 or 2)
         """
         self.goto_xy(x, y)
         self.set_charset(charset)
         if clear_bol:
             self.clear_begin_of_line()
+        self.send(self.char_size_sequence(width=char_width, height=char_height))
         self.send(text)
         if clear_eol:
             self.clear_end_of_line()
+
+        # remember we are no more interpreting graphical characters
+        self._vt_graphics = False
 
     def display_status(self, text, x=0):
         """ Displays a text in the status line.
