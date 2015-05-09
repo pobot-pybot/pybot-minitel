@@ -39,7 +39,7 @@ class Runner(object):
         self._args = cli_args
         self.script_path = os.path.dirname(__file__)
 
-    def run_test(self, test_name):
+    def run_test(self, test_name, test_opts=None):
         method_name = 'test_' + test_name
         try:
             method = getattr(self, method_name)
@@ -56,14 +56,14 @@ class Runner(object):
                 mt.display_status(mt.text_style_sequence(inverse=True) + "PyNitel demonstration".ljust(40))
                 mt.cursor_home()
                 try:
-                    method(mt)
+                    method(mt, test_opts)
 
                 finally:
                     mt.clear_all()
                     mt.display_status("I'll be back...")
                     mt.close()
 
-    def test_display_attrs(self, mt):
+    def test_display_attrs(self, mt, opts):
         """ displays text with various attributes
 
         :param minitel.Minitel mt: the Minitel instance
@@ -85,21 +85,47 @@ class Runner(object):
 
         time.sleep(10)
 
-    def test_image(self, mt):
+    def test_image(self, mt, opts):
         """ converts and display an image
         """
-        img = Image.open(os.path.join(self.script_path, 'fixtures/pobot-logo-small.png'))
+        images_dir = os.path.join(self.script_path, 'fixtures', 'img')
+        mt.clear_screen()
+        for img_name in os.listdir(images_dir):
+            img = Image.open(os.path.join(images_dir, img_name))
+            vt_img = VideotexImage(img)
+            code = vt_img.to_videotex()
+
+            mt.videotex_graphic_mode()
+            mt.send(code)
+
+            mt.display_text('ENVOI', 34, 23)
+            mt.wait_for_key(max_wait=60)
+
+    def test_youpi(self, mt, opts):
+        """ Youpi 2.0 demo home screen
+        """
+        _parser = argparse.ArgumentParser()
+        _parser.add_argument('-s', '--save', action='store_true')
+        _parser.add_argument('-w', '--wait', type=int, default=10)
+        _args = _parser.parse_args(opts)
+
+        img = Image.open(os.path.join(self.script_path, 'fixtures', 'img', 'youpi.png'))
         vt_img = VideotexImage(img)
         code = vt_img.to_videotex()
 
+        if _args.save:
+            img_file = 'image.vt'
+            with file(img_file, 'wb') as fp:
+                fp.write(''.join(code))
+                print("Videotex image saved as : %s" % img_file)
+
         mt.videotex_graphic_mode()
-        mt.clear_screen()
         mt.send(code)
 
-        mt.display_text('ENVOI', 34, 23)
-        mt.wait_for_key(max_wait=10)
+        mt.display_text('YOUPI 2.0', x=3, y=18, char_width=2, char_height=2)
+        mt.wait_for_key(max_wait=_args.wait)
 
-    def test_input(self, mt):
+    def test_input(self, mt, opts):
         """ gets a user input
         """
         prompt_x, prompt_y = (0, 3)
@@ -111,14 +137,14 @@ class Runner(object):
             mt.display_text("I'm a poor lonesome Minitel :(", *greetings_pos)
         time.sleep(10)
 
-    def test_status_line(self, mt):
+    def test_status_line(self, mt, opts):
         """ displays text on the status (top most) line
         """
         mt.display_status(mt.text_style_sequence(inverse=True) + "I'm in status line".ljust(40))
         mt.display_text("And I'm in normal area")
         time.sleep(10)
 
-    def test_probe(self, mt):
+    def test_probe(self, mt, opts):
         """ probes device and display settings.
 
         :param minitel.Minitel mt: the device
@@ -160,7 +186,7 @@ class Runner(object):
             speed, caps_lock, roll, width
         ))
 
-    def test_form(self, mt):
+    def test_form(self, mt, opts):
         """ displays a hard-coded form
         """
         form = Form(mt)
@@ -174,7 +200,7 @@ class Runner(object):
         content = form.render_and_input({'fname': 'Eric'})
         print('form content: %s' % content)
 
-    def test_form_dump_def(self, mt):
+    def test_form_dump_def(self, mt, opts):
         """ generates the JSON representation of a form
         """
         form = Form(mt)
@@ -187,7 +213,7 @@ class Runner(object):
 
         print(form.dump_definition())
 
-    def test_form_load_def(self, mt):
+    def test_form_load_def(self, mt, opts):
         """ loads a form from its JSON representation and displays it
         """
         form = Form(mt)
@@ -220,8 +246,14 @@ if __name__ == '__main__':
         help='activates debug trace',
         action='store_true'
     )
+    parser.add_argument(
+        'test_opts',
+        nargs='*',
+        help='test specific options'
+    )
 
     args = parser.parse_args()
+
     if args.test_name == '?':
         print('Available tests :')
         for name, descr in Runner.get_tests_list():
@@ -229,6 +261,6 @@ if __name__ == '__main__':
 
     else:
         try:
-            Runner(args).run_test(args.test_name)
+            Runner(args).run_test(args.test_name, args.test_opts)
         except NoSuchTestError as e:
             print('[ERROR] no such test : ' + e.message)
