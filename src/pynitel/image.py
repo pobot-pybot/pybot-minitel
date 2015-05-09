@@ -57,7 +57,7 @@ else:
                 h (int): target image height (in sub-pixels)
 
             Returns:
-                str: the Videotex sequence reproducing the image
+                list[str]: the Videotex sequence reproducing the image
             """
             # tweak w and h to proper values
             w = ((w + 1) / 2) * 2
