@@ -328,6 +328,15 @@ class Minitel(object):
         data = ord(self.request(Protocol.STATUS, Protocol.PRO2_LEN)[-1])
         return bool(data & 0x01)
 
+    def get_screen_width(self):
+        """ Returns the width of the screen (in characters), depending on the
+        current mode.
+
+        Returns:
+            int: the width (40 or 80)
+        """
+        return 80 if self.is_w80() else 40
+
     def set_char_size(self, width=1, height=1):
         """ Defines the size (width and height) of the characters in Videotex mode.
 
@@ -620,6 +629,17 @@ class Minitel(object):
 
         # remember we are no more interpreting graphical characters
         self._vt_graphics = False
+
+    def display_text_center(self, text, y=0, charset=0, char_width=1, char_height=1, pad_char=' '):
+        """ Convenience method for displaying a centered text on a given line.
+
+        Parameters:
+            pad_char (str): the string padding char. Default: ' '
+
+        See :py:meth:`display_text` for the documentation of the other parameters
+        """
+        text = text.center(40 if char_width == 1 else 20, pad_char)
+        self.display_text(text, 0, y, charset=charset, char_width=char_width, char_height=char_height)
 
     def display_status(self, text, x=0):
         """ Displays a text in the status line.
