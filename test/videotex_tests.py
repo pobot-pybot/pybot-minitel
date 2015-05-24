@@ -20,6 +20,8 @@ logging.basicConfig(
 import pynitel
 from pynitel.forms import Form
 from pynitel.image import VideotexImage
+from pynitel.asciiart import AsciiArtImage
+from pynitel.menu import Menu
 
 
 class NoSuchTestError(Exception):
@@ -101,6 +103,18 @@ class Runner(object):
             mt.display_text('ENVOI', 34, 23)
             mt.wait_for_key(max_wait=60)
 
+    def test_asciiart(self, mt, opts):
+        """ loads and display an ASCII art image
+        """
+        mt.clear_screen()
+        with file(os.path.join(self.script_path, 'fixtures', 'img', 'youpi-ascii.txt'), 'rt') as fp:
+            lines = fp.readlines()
+            img = AsciiArtImage(lines)
+            img.display(mt, x=4, y=4)
+
+            mt.display_text('ENVOI', 34, 23)
+            mt.wait_for_key(max_wait=60)
+
     def test_youpi(self, mt, opts):
         """ Youpi 2.0 demo home screen
         """
@@ -109,7 +123,7 @@ class Runner(object):
         _parser.add_argument('-w', '--wait', type=int, default=10)
         _args = _parser.parse_args(opts)
 
-        img = Image.open(os.path.join(self.script_path, 'fixtures', 'img', 'youpi.png'))
+        img = Image.open(os.path.join(self.script_path, 'fixtures', 'img', 'youpi-from-svg.png'))
         vt_img = VideotexImage(img)
         code = vt_img.to_videotex()
 
@@ -123,6 +137,8 @@ class Runner(object):
         mt.send(code)
 
         mt.display_text('YOUPI 2.0', x=3, y=18, char_width=2, char_height=2)
+        mt.display_text('by POBOT', x=30, y=23)
+
         mt.wait_for_key(max_wait=_args.wait)
 
     def test_input(self, mt, opts):
@@ -200,6 +216,32 @@ class Runner(object):
         content = form.render_and_input({'fname': 'Eric'})
         print('form content: %s' % content)
 
+    def test_menu(self, mt, opts):
+        """ displays a menu
+        """
+        demos = ["make foo", "do bar", "baz everything"]
+
+        while True:
+            menu = Menu(
+                mt,
+                title=['Menu demo', '-------------'],
+                choices=demos,
+                prompt='Your taste',
+                line_skip=2,
+                margin_top=2,
+                prompt_line=20,
+                addit=[(0, 23, ' SOMMAIRE: quit '.center(40, '-'))]
+            )
+
+            choice = menu.get_choice()
+
+            if choice:
+                mt.display_text_center(' selected demo : %s ' % demos[choice - 1], 23, pad_char='-')
+
+                time.sleep(3)
+            else:
+                break
+
     def test_form_dump_def(self, mt, opts):
         """ generates the JSON representation of a form
         """
@@ -222,6 +264,7 @@ class Runner(object):
 
         content = form.render_and_input()
         print('form content: %s' % content)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,8 +1,8 @@
-``pynitel.forms`` module
-========================
+``pynitel.menu`` module
+=======================
 
-.. automodule:: pynitel.forms
+.. automodule:: pynitel.menu
 
-.. autoclass:: Form
+.. autoclass:: Menu
     :members:
     :show-inheritance:

@@ -33,7 +33,8 @@ class Form(object):
     """
     def __init__(self, mt):
         """
-        :param Minitel mt: the Minitel instance
+        Parameters:
+            mt (:py:class:`Minitel`): the Minitel instance
         """
         if not (mt and isinstance(mt, Minitel)):
             raise ValueError('missing or invalid mt parameter')
@@ -270,7 +271,7 @@ class FieldDefinition(namedtuple('FieldDefinition', 'x y size marker')):
     def __new__(cls, x, y, size, marker='.'):
         if not 0 <= x < 40:
             raise ValueError('invalid x position : %s' % x)
-        if not 0 <= y < 23:
+        if not 0 <= y <= 23:
             raise ValueError('invalid y position : %s' % y)
         if not 0 <= size < 40:
             raise ValueError('invalid field size : %s' % size)

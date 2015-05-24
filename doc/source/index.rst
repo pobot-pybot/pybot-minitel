@@ -14,7 +14,8 @@ In addition to Minitel modes management and interactions, it includes modules fo
         - the ability to store the form definition (prompts, fields,...) as external
           JSON files,
         - data display and entry handling, including special keys for
-          navigating, editing and submiting the data.
+          navigating, editing and submitting the data.
+    - a simple menu management module
 
 It uses elements from :
 
@@ -29,7 +30,9 @@ Contents
 
    core
    forms
+   menu
    image
+   asciiart
    sequences
    identification
    constants
