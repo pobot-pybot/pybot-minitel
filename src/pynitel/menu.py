@@ -76,18 +76,20 @@ class Menu(object):
         self._form = form
         self._choice_max = choice_max
 
-    def get_choice(self):
+    def get_choice(self, max_wait=None):
         """ Waits for the user input and returns it.
 
         The entered value is checked against the number of options, and rejected if not valid.
         Input can be cancelled by using the `SOMMAIRE` key.
 
+        Parameters:
+            max_wait (int): maximum wait time in seconds for selecting an option (if None, waits indefinitely)
         Returns:
             the option number (starting from 1) or None if input has been canceled
         """
         self._form.render()
         while True:
-            content = self._form.input()
+            content = self._form.input(max_wait=max_wait)
             if content:
                 try:
                     choice = int(content['choice'])

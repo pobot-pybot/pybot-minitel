@@ -463,7 +463,7 @@ class Minitel(object):
     def beep(self):
         self.send(BEL)
 
-    def rlinput(self, max_length=40, marker=' ', start_pos=None, initial_value=None):
+    def rlinput(self, max_length=40, marker=' ', start_pos=None, initial_value=None, max_wait=None):
         """ User input with basic Gnu's readline features
 
         Parameters:
@@ -471,9 +471,11 @@ class Minitel(object):
             marker (str): the char to be used as the input area filler
             start_pos (tuple): input area start position (default: current one)
             initial_value(str): the value of the input on entry
+            max_wait (int): maximum wait time in seconds for user to complete the input (if None, waits indefinitely)
 
         Returns:
-            tuple: the entered value and the key used to terminate the entry
+            tuple: the entered value and the key used to terminate the entry. If the time limit has been reached,
+                the first item will be the characters entered so far and the second one will be None
         """
         initial_value = initial_value or ''
         chars = list(initial_value)
@@ -491,7 +493,8 @@ class Minitel(object):
         self.goto_xy(x0 + len(initial_value), y0)
 
         # handle user typed keys
-        while True:
+        limit = time.time() + (max_wait if max_wait else float('inf'))
+        while time.time() < limit:
             c = self.receive()
             if c:
                 if c == SEP:
@@ -525,9 +528,12 @@ class Minitel(object):
                 else:
                     self.beep()
 
+            # do not hog CPU
+            time.sleep(0.1)
+
         return ''.join(chars), c
 
-    def input(self, max_length=40, prompt=None, input_start_xy=None, marker=' '):
+    def input(self, max_length=40, prompt=None, input_start_xy=None, marker=' ', max_wait=None):
         """ Get a user input from the Minitel.
 
         Handles common editing actions, such as backspace and clear input.
@@ -539,6 +545,7 @@ class Minitel(object):
             max_length (int): maximum length of entered text
             prompt (tuple): optional prompt to display, as a (text, width, x, y) tuple
             input_start_xy (tuple): x, y coordinates for input area start. If None, use the current position
+            max_wait (int): maximum wait time in seconds for user to complete the input (if None, waits indefinitely)
 
         Returns:
             tuple: the entered value and the key used to terminate the entry
@@ -556,7 +563,7 @@ class Minitel(object):
 
         self.goto_xy(x, y)
         self.show_cursor()
-        value, key = self.rlinput(max_length=max_length, marker=marker)
+        value, key = self.rlinput(max_length=max_length, marker=marker, max_wait=max_wait)
         self.show_cursor(False)
         self.send(' ' * (max_length - len(value)))
         return value, key

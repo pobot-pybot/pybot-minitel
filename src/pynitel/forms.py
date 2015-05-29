@@ -5,6 +5,7 @@
 
 from collections import namedtuple
 import json
+import time
 
 from .core import Minitel
 from .constants import *
@@ -119,7 +120,7 @@ class Form(object):
             value = content.get(field_name, '')
             self._mt.display_text(value.ljust(field.size, field.marker), field.x, field.y)
 
-    def input(self, content=None):
+    def input(self, content=None, max_wait=None):
         """ Handles user interactions and return the fields content if the form is submitted.
 
         The cursor is made visible on start, and hidden back when exiting.
@@ -146,6 +147,8 @@ class Form(object):
 
         Parameters:
             content (dict): optional dictionary containing the initial field values
+            max_wait (int): maximum wait time in seconds for filling and validating the form
+                (if None, waits indefinitely)
 
         Returns:
             dict: the fields content if the form has been submitted, None otherwise.
@@ -156,11 +159,16 @@ class Form(object):
         field_count = len(self._fields_sequence)
         self._mt.show_cursor()
         try:
-            while True:
+            limit = time.time() + (max_wait if max_wait else float('inf'))
+            while time.time() < limit:
+                remain = limit - time.time()
                 field_name = self._fields_sequence[field_num]
                 field = self._fields[field_name]
-                value, key = self._mt.rlinput(field.size, field.marker, (field.x, field.y), content.get(field_name, ''))
-                if key == KeyCode.CONTENT:
+                value, key = self._mt.rlinput(
+                    field.size, field.marker, (field.x, field.y), content.get(field_name, ''),
+                    max_wait=remain
+                )
+                if key in (None, KeyCode.CONTENT):
                     return None
 
                 content[field_name] = value
