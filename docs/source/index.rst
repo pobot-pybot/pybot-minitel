@@ -1,6 +1,6 @@
 
-Welcome to PyNitel library documentation!
-=========================================
+Welcome to PyBot-minitel library documentation!
+===============================================
 
 A simple library for communication with Minitels in Python.
 
