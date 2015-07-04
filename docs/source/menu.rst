@@ -1,7 +1,7 @@
-``pybot_minitel.menu`` module
+``pybot.minitel.menu`` module
 =============================
 
-.. automodule:: pybot_minitel.menu
+.. automodule:: pybot.minitel.menu
 
 .. autoclass:: Menu
     :members:

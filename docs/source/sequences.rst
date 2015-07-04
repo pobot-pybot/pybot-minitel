@@ -1,6 +1,6 @@
-``pybot_minitel.sequences`` module
+``pybot.minitel.sequences`` module
 ==================================
 
-.. automodule:: pybot_minitel.sequences
+.. automodule:: pybot.minitel.sequences
     :members:
     :show-inheritance:

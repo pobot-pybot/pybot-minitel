@@ -1,6 +1,6 @@
-``pybot_minitel.identification`` module
+``pybot.minitel.identification`` module
 =======================================
 
-.. automodule:: pybot_minitel.identification
+.. automodule:: pybot.minitel.identification
     :members:
     :show-inheritance:

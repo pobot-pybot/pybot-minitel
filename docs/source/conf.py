@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# nROS documentation build configuration file, created by
+# pybot.minitel package documentation build configuration file, created by
 # sphinx-quickstart on Wed Mar 25 22:24:33 2015.
 #
 # This file is execfile()d with the current directory set to its

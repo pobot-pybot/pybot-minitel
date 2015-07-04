@@ -1,7 +1,7 @@
-``pybot_minitel.image`` module
+``pybot.minitel.image`` module
 ==============================
 
-.. automodule:: pybot_minitel.image
+.. automodule:: pybot.minitel.image
 
 .. autoclass:: VideotexImage
     :members:

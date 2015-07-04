@@ -1,7 +1,7 @@
-``pybot_minitel.forms`` module
+``pybot.minitel.forms`` module
 ==============================
 
-.. automodule:: pybot_minitel.forms
+.. automodule:: pybot.minitel.forms
 
 .. autoclass:: Form
     :members:

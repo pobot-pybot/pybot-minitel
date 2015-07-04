@@ -1,6 +1,6 @@
-``pybot_minitel.core`` module
+``pybot.minitel.core`` module
 =============================
 
-.. automodule:: pybot_minitel.core
+.. automodule:: pybot.minitel.core
     :members:
     :show-inheritance:

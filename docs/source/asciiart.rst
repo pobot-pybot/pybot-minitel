@@ -1,7 +1,7 @@
-``pypybot_minitel.asciiart`` module
-===================================
+``pybot.minitel.asciiart`` module
+=================================
 
-.. automodule:: pybot_minitel.asciiart
+.. automodule:: pybot.minitel.asciiart
 
 .. autoclass:: AsciiArtImage
     :members:

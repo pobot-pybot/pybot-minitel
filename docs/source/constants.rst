@@ -1,6 +1,6 @@
-``pybot_minitel.constants`` module
+``pybot.minitel.constants`` module
 ==================================
 
-.. automodule:: pybot_minitel.constants
+.. automodule:: pybot.minitel.constants
     :members:
     :show-inheritance:
