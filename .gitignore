@@ -60,4 +60,4 @@ target/
 
 .idea
 _build
-test/image.vt
+scripts/image.vt
