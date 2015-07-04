@@ -51,7 +51,7 @@ The following instructions suppose we are running in a virtualev, thus not needi
 Documentation generation
 ========================
 
-The documentation generation uses (Sphinx)[http://sphinx-doc.org/].
+The documentation generation uses Sphinx (http://sphinx-doc.org/).
 ::
 
     $ cd docs
