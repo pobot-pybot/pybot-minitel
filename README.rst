@@ -42,8 +42,17 @@ It uses elements from :
 Installation
 ============
 
+The following instructions suppose we are running in a virtualev, thus not needing root rights to be executed.
 ::
 
     $ python setup.py sdist
     $ pip install dist/*.tar.gz
 
+Documentation generation
+========================
+
+The documentation generation uses (Sphinx)[http://sphinx-doc.org/].
+::
+
+    $ cd docs
+    $ make html
