@@ -50,6 +50,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
+	@echo "  ghpublish	to build the HTML files and publish them as GitHub pages"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -199,3 +200,6 @@ rst:
 
 view:
 	firefox $(BUILDDIR)/html/index.html &
+
+ghpublish: html
+	cd $(BUILDDIR)/html ; git commit -a -m "rebuilt docs" ; git push origin gh-pages

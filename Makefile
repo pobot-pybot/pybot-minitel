@@ -1,5 +1,5 @@
 SHELL	:= /bin/bash
-PYTHON	= /usr/bin/python
+PYTHON	:= /usr/bin/python
 
 bdist:
 	$(PYTHON) setup.py bdist
