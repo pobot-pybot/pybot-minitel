@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.menu &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>pybot.minitel.menu</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for pybot.minitel.menu</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Eric Pascual&#39;</span>
+
+
+<span class="kn">from</span> <span class="nn">forms</span> <span class="kn">import</span> <span class="n">Form</span>
+
+
+<div class="viewcode-block" id="Menu"><a class="viewcode-back" href="../../../menu.html#pybot.minitel.menu.Menu">[docs]</a><span class="k">class</span> <span class="nc">Menu</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Displays a menu with choices and handles the user input.</span>
+
+<span class="sd">    The input is checked against the list of selectable options, the</span>
+<span class="sd">    menu staying displayed until a valid one is entered.</span>
+
+<span class="sd">    Canceling is possible by using the SOMMAIRE (content) key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span>
+                 <span class="n">prompt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">line_skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">margin_top</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prompt_line</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">addit</span><span class="o">=</span><span class="bp">None</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            mt (:py:class:`Minitel`): the Minitel instance</span>
+<span class="sd">            title (str or list of str): the menu title, displayed centered on the screen</span>
+<span class="sd">            choices (list of str): the options</span>
+<span class="sd">            prompt (str): the prompt displayed with the input field. Default: &quot;Your choice&quot;</span>
+<span class="sd">            line_skip (int): vertical space between options. Default (0) places options on consecutive lines</span>
+<span class="sd">            margin_top (int): vertical space before the menu title. Default: 0</span>
+<span class="sd">            prompt_line (int): line number on which the input prompt is displayed</span>
+<span class="sd">            addit (list of tuple): additional prompts as a list of (x, y, text) tuples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mt</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;mt parameter is mandatory&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">choices</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;choices parameter must be an iterable of option labels&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;choices must contain at least 2 items&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="n">title</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prompt</span><span class="p">:</span>
+            <span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot;Your choice&quot;</span>
+
+        <span class="n">choice_max</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> [1..</span><span class="si">%d</span><span class="s">] : &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">choice_max</span><span class="p">)</span>
+        <span class="n">prompt_text</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">+</span> <span class="p">(</span><span class="s">&#39;..&#39;</span> <span class="k">if</span> <span class="n">choice_max</span> <span class="o">&gt;</span> <span class="mi">9</span> <span class="k">else</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; + ENVOI&quot;</span>
+        <span class="n">x_prompt</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">40</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">prompt_text</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">form</span> <span class="o">=</span> <span class="n">Form</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">margin_top</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">title</span><span class="p">:</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">choice_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;</span><span class="si">%2d</span><span class="s"> - </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">choices</span><span class="p">)]</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">choice_lines</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">40</span> <span class="o">-</span> <span class="n">max_len</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">y_inc</span> <span class="o">=</span> <span class="n">line_skip</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">choice_lines</span><span class="p">:</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="n">y_inc</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">prompt_line</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="n">x_prompt</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">prompt_text</span><span class="p">)</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s">&#39;choice&#39;</span><span class="p">,</span> <span class="n">x_prompt</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">prompt</span><span class="p">),</span> <span class="n">y</span><span class="p">,</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">choice_max</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="k">else</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">addit_prompt</span> <span class="ow">in</span> <span class="n">addit</span><span class="p">:</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="o">*</span><span class="n">addit_prompt</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span> <span class="o">=</span> <span class="n">mt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_form</span> <span class="o">=</span> <span class="n">form</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_choice_max</span> <span class="o">=</span> <span class="n">choice_max</span>
+
+<div class="viewcode-block" id="Menu.get_choice"><a class="viewcode-back" href="../../../menu.html#pybot.minitel.menu.Menu.get_choice">[docs]</a>    <span class="k">def</span> <span class="nf">get_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Waits for the user input and returns it.</span>
+
+<span class="sd">        The entered value is checked against the number of options, and rejected if not valid.</span>
+<span class="sd">        Input can be cancelled by using the `SOMMAIRE` key.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            max_wait (int): maximum wait time in seconds for selecting an option (if None, waits indefinitely)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            the option number (starting from 1) or None if input has been canceled</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">max_wait</span><span class="o">=</span><span class="n">max_wait</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">choice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s">&#39;choice&#39;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">choice</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choice_max</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">choice</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+</pre></div></div></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

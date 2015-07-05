@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.forms &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>pybot.minitel.forms</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for pybot.minitel.forms</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; A simple Minitel forms management toolkit.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Minitel</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Eric Pascual&#39;</span>
+
+
+<div class="viewcode-block" id="Form"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form">[docs]</a><span class="k">class</span> <span class="nc">Form</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines the forms in terms of layout and field connection with the application.</span>
+
+<span class="sd">    A form is made of static prompts and entry fields. The class handles its rendering</span>
+<span class="sd">    and the management of user interactions when modifying its content.</span>
+
+<span class="sd">    The definition of the form can be provided by calls to :py:meth:`add_prompt` and</span>
+<span class="sd">    :py:meth:`add_field`. This can also be done by loading the equivalent JSON data</span>
+<span class="sd">    structure, using :py:meth:`load_definition`.</span>
+
+<span class="sd">    For convenience, the :py:meth:`dump_definition` does the reverse operation, which</span>
+<span class="sd">    allows producing the JSON data directly from the current definition of the form.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        The class is intended to be used in Videotex mode. Maybe it works fine in</span>
+<span class="sd">        Teleinfo mode too, but it has not been tested. By the way, to ensure all</span>
+<span class="sd">        goes well, the Minitel is switched in Videotex mode when rendering forms.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            mt (:py:class:`Minitel`): the Minitel instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">mt</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span> <span class="n">Minitel</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;missing or invalid mt parameter&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span> <span class="o">=</span> <span class="n">mt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="mi">80</span> <span class="k">if</span> <span class="n">mt</span><span class="o">.</span><span class="n">is_w80</span><span class="p">()</span> <span class="k">else</span> <span class="mi">40</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared</span> <span class="o">=</span> <span class="bp">False</span>
+
+<div class="viewcode-block" id="Form.add_prompt"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.add_prompt">[docs]</a>    <span class="k">def</span> <span class="nf">add_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a fixed text to the form, at a given position.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            x (int): X coordinate of the prompt start position</span>
+<span class="sd">            y (int): Y coordinate of the prompt start position</span>
+<span class="sd">            text (str): the prompt text (can include an attributes sequence)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PromptDefinition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Form.add_field"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.add_field">[docs]</a>    <span class="k">def</span> <span class="nf">add_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a field to the form, at a given position and with a given size.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): the field name</span>
+<span class="sd">            x (int): X coordinate of the prompt start position</span>
+<span class="sd">            y (int): Y coordinate of the prompt start position</span>
+<span class="sd">            size (int): the field size</span>
+<span class="sd">            marker (char): the character used to mark the fields area (default: &#39;.&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">FieldDefinition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">or</span> <span class="s">&#39;.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+    <span class="k">def</span> <span class="nf">_screen_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_cmp_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">cmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_screen_pos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_screen_pos</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_cmp_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">cmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_screen_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">a</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_screen_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">b</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="Form.prepare"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepares the form by sorting the prompts and fields according to</span>
+<span class="sd">         their position.</span>
+
+<span class="sd">         Is automatically invoked by :py:meth:`render`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cmp_prompt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields_sequence</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="nb">cmp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cmp_field</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="Form.render"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Renders the form on the screen.</span>
+
+<span class="sd">        Should normally be invoked before calling :py:meth:`input`.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            The Minitel is switched in Videotex mode before processing.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            content (dict): optional dictionary containing the initial field values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">Minitel</span><span class="o">.</span><span class="n">VIDEOTEX</span><span class="p">)</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">display_text</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields_sequence</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">display_text</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">marker</span><span class="p">),</span> <span class="n">field</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Form.input"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles user interactions and return the fields content if the form is submitted.</span>
+
+<span class="sd">        The cursor is made visible on start, and hidden back when exiting.</span>
+
+<span class="sd">        Special keys are interpreted as follows :</span>
+
+<span class="sd">            ``ENVOI`` (SEND)</span>
+<span class="sd">                submits the form, returning the fields content as a dictionary</span>
+
+<span class="sd">            ``SOMMAIRE`` (CONTENT)</span>
+<span class="sd">                cancels and returns None</span>
+
+<span class="sd">            ``RETOUR`` (BACK)</span>
+<span class="sd">                jumps to the previous field (or to the last one if current on the first one)</span>
+
+<span class="sd">            ``SUITE`` (NEXT)</span>
+<span class="sd">                jumps to the next field (or to the first one if current on the last one)</span>
+
+<span class="sd">            ``CORRECTION``</span>
+<span class="sd">                backspaces one character in the field</span>
+
+<span class="sd">            ``ANNULATION`` (CANCEL)</span>
+<span class="sd">                clears the field</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            content (dict): optional dictionary containing the initial field values</span>
+<span class="sd">            max_wait (int): maximum wait time in seconds for filling and validating the form</span>
+<span class="sd">                (if None, waits indefinitely)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: the fields content if the form has been submitted, None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="n">field_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">field_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields_sequence</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">show_cursor</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">limit</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_wait</span> <span class="k">if</span> <span class="n">max_wait</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
+            <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+                <span class="n">remain</span> <span class="o">=</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">field_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields_sequence</span><span class="p">[</span><span class="n">field_num</span><span class="p">]</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
+                <span class="n">value</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">rlinput</span><span class="p">(</span>
+                    <span class="n">field</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                    <span class="n">max_wait</span><span class="o">=</span><span class="n">remain</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">CONTENT</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">None</span>
+
+                <span class="n">content</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">SEND</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">content</span>
+
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">KeyCode</span><span class="o">.</span><span class="n">NEXT</span><span class="p">,</span> <span class="n">CR</span><span class="p">):</span>
+                    <span class="n">field_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">field_count</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">PREV</span><span class="p">:</span>
+                    <span class="n">field_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">field_count</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mt</span><span class="o">.</span><span class="n">show_cursor</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Form.render_and_input"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.render_and_input">[docs]</a>    <span class="k">def</span> <span class="nf">render_and_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; A shortcut for the render / input sequence.</span>
+
+<span class="sd">        Refer to :py:meth:`render` and :py:meth:`input` for documentation of the parameters</span>
+<span class="sd">        and return value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Form.load_definition"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.load_definition">[docs]</a>    <span class="k">def</span> <span class="nf">load_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Loads the form definition from the provided JSON structure.</span>
+
+<span class="sd">        Refer to :py:meth:`dump_definition` documentation for the structure</span>
+<span class="sd">        specifications.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            data (str): the form definition in JSON format</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if no data or invalid JSON data provided</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;no definition provided&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">defs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">prompt_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">[</span><span class="s">&#39;prompts&#39;</span><span class="p">]:</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="n">prompt_def</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_prompt</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">text</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">[</span><span class="s">&#39;fields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_def</span> <span class="o">+</span> <span class="p">[</span><span class="s">&#39;.&#39;</span><span class="p">])[:</span><span class="mi">4</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">field_name</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">marker</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid form definition data (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Form.dump_definition"><a class="viewcode-back" href="../../../forms.html#pybot.minitel.forms.Form.dump_definition">[docs]</a>    <span class="k">def</span> <span class="nf">dump_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the form current definition as a JSON formatted structure.</span>
+
+<span class="sd">        The returned structure is a dictionary, containing the two top-level entries ``prompts``</span>
+<span class="sd">        and ``fields``.</span>
+
+<span class="sd">        The value of the ``prompts`` entry is a list of tuples, composed of :</span>
+
+<span class="sd">            - the X position</span>
+<span class="sd">            - the Y position</span>
+<span class="sd">            - the prompt text</span>
+
+<span class="sd">        The value of the ``fields`` entry is a sub-dictionary, keyed by the field names, and which</span>
+<span class="sd">        values are tuples, composed of :</span>
+
+<span class="sd">            - the X position</span>
+<span class="sd">            - the Y position</span>
+<span class="sd">            - the size (in characters)</span>
+<span class="sd">            - the marker character (defaulted to ``.`` if not included)</span>
+
+<span class="sd">        Example: ::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;prompts&quot;: [</span>
+<span class="sd">                    [0, 2, &quot;First name&quot;],</span>
+<span class="sd">                    [0, 4, &quot;Last name&quot;],</span>
+<span class="sd">                    [30, 23, &quot;ENVOI&quot;]</span>
+<span class="sd">                ],</span>
+<span class="sd">                &quot;fields&quot;: {</span>
+<span class="sd">                    &quot;lname&quot;: [15, 4, 20, &quot;.&quot;],</span>
+<span class="sd">                    &quot;fname&quot;: [15, 2, 20, &quot;.&quot;]</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: JSON form definition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;prompts&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompts</span><span class="p">,</span>
+            <span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+</div></div>
+<span class="n">PromptDefinition</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;PromptDefinition&#39;</span><span class="p">,</span> <span class="s">&#39;x y text&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FieldDefinition</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;FieldDefinition&#39;</span><span class="p">,</span> <span class="s">&#39;x y size marker&#39;</span><span class="p">)):</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">40</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid x position : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">23</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid y position : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mi">40</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid field size : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">size</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FieldDefinition</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">marker</span> <span class="ow">or</span> <span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,951 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.core &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>pybot.minitel.core</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for pybot.minitel.core</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: UTF-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; Core classes for communicating with a Minitel.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">serial</span>
+
+<span class="kn">from</span> <span class="nn">.sequences</span> <span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">TeleinfoCommand</span><span class="p">,</span> <span class="n">TextAttribute</span><span class="p">,</span> <span class="n">GET_POS</span><span class="p">,</span> <span class="n">VideotexMode</span>
+<span class="kn">from</span> <span class="nn">.identification</span> <span class="kn">import</span> <span class="n">DeviceSpecs</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Minitel&#39;</span><span class="p">,</span> <span class="s">&#39;Part&#39;</span><span class="p">)</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;minitel&#39;</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
+<span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">log_rx</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="s">&#39;rx&#39;</span><span class="p">)</span>
+<span class="n">log_tx</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="s">&#39;tx&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;hex&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Minitel"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel">[docs]</a><span class="k">class</span> <span class="nc">Minitel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Represents a Minitel beast.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        tested only with a Philips Minitel 2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">VIDEOTEX</span><span class="p">,</span> <span class="n">MIXED</span><span class="p">,</span> <span class="n">TELEINFO</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c"># transition matrix between modes (line=current, col=target)</span>
+    <span class="n">_MODE_TRANSITIONS</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">TO_VIDEOTEX</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">MIXED1</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">TELINFO</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">MIXED2</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">TELINFO</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">TO_VIDEOTEX</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c"># Videotex sub-modes</span>
+    <span class="c"># VT_TEXT = 0</span>
+    <span class="c"># VT_GRAPHICS = 1</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_in_vt_mode</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_vt_graphics</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">baud</span><span class="o">=</span><span class="mi">4800</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The serial port to be used can be either a string such as ``/dev/ttyUSB0``</span>
+<span class="sd">        or an instance of :py:class:`serial.Serial`. In this case, the port is automatically</span>
+<span class="sd">        opened if not yet done.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            When providing a port instance, beware to have it initialized</span>
+<span class="sd">            with even parity and 7 data bytes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            port (str or :py:class:`serial.Serial`): serial port identification or serial port instance</span>
+<span class="sd">            baud (int): baud rate (default: 4800)</span>
+<span class="sd">            debug (bool): if True, communications are traced</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if port is not specified.</span>
+<span class="sd">            TypeError: if the port type is not one of the expected ones</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;port parameter is mandatory&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">baud</span> <span class="o">=</span> <span class="n">baud</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vtMode</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">portName</span> <span class="o">=</span> <span class="n">port</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ser</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">baud</span><span class="p">,</span>
+                                     <span class="n">parity</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">PARITY_EVEN</span><span class="p">,</span>
+                                     <span class="n">bytesize</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">SEVENBITS</span><span class="p">,</span>
+                                     <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="o">.</span><span class="n">isOpen</span><span class="p">():</span>
+                <span class="n">port</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ser</span> <span class="o">=</span> <span class="n">port</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;port parameter type mismatch&#39;</span><span class="p">)</span>
+
+        <span class="c"># Since we don&#39;t know the current speed setting of the Minitel,</span>
+        <span class="c"># we test all possible ones until it works in order to be able to</span>
+        <span class="c"># communicate with it</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;communication speed discovery and setting :&#39;</span><span class="p">)</span>
+
+        <span class="n">init_ok</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">last_attempt</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;- first attempt, supposing Minitel in Videotex&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">init_ok</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">LinkSpeed</span><span class="o">.</span><span class="n">BAUDRATES</span><span class="p">):</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;+ trying with baudrate=</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">speed</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">baudrate</span> <span class="o">=</span> <span class="n">speed</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">():</span>
+                    <span class="c"># we found the current operating speed</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;+ current speed is </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">speed</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">speed</span> <span class="o">!=</span> <span class="n">baud</span><span class="p">:</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;+ changing it to </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">baud</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">set_speed</span><span class="p">(</span><span class="n">baud</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;+ already at the requested speed&#39;</span><span class="p">)</span>
+                    <span class="n">init_ok</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">last_attempt</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="c"># check that it worked</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">init_ok</span><span class="p">:</span>
+                <span class="c"># maybe we are in Teleinfo mode =&gt; try switching to Videotex using all possible speeds</span>
+                <span class="c"># and re-attempt</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;* maybe in Teleinfo =&gt; switch to Videotex&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">LinkSpeed</span><span class="o">.</span><span class="n">BAUDRATES</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">baudrate</span> <span class="o">=</span> <span class="n">speed</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">TO_VIDEOTEX</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">():</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;- now in Videotex =&gt; last attempt&#39;</span><span class="p">)</span>
+                        <span class="k">break</span>
+
+                <span class="n">last_attempt</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">init_ok</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;speed setting failed&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VIDEOTEX</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Minitel.close"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Closes the communication.</span>
+
+<span class="sd">        Should be invoked only when the instance is no more needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Minitel.send"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends data to the Minitel.</span>
+
+<span class="sd">        :param str data: the data to be sent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">encoded</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="n">U_TO_VT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span>
+            <span class="p">])</span>
+            <span class="k">if</span> <span class="n">log_tx</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
+                <span class="n">log_tx</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">encoded</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encoded</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Minitel.receive"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Receives a given count of bytes from the Minitel.</span>
+
+<span class="sd">        Does not wait for data, but returns whats is currently available.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            count (int): the expected count of bytes (default: 1)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the received bytes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">log_rx</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">data</span>
+</div>
+<div class="viewcode-block" id="Minitel.request"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.request">[docs]</a>    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">reply_size</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends a request and returns its reply.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            The serial input link is flushed before issuing the request to be sure</span>
+<span class="sd">            that the returned value will not contain data remaining from previous</span>
+<span class="sd">            communications. This means that such data will be lost.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            command (str): the command to be sent</span>
+<span class="sd">            reply_size (int): the size of the expected reply</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the reply</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">is_protocol_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;protocol commands available in Videotex mode only&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">flushInput</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">reply_size</span><span class="p">)</span>
+        <span class="n">log_rx</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">reply</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reply</span>
+</div>
+<div class="viewcode-block" id="Minitel.probe"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.probe">[docs]</a>    <span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reads the content of the identification ROM and returns it in a</span>
+<span class="sd">        decoded form.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :py:class:`DeviceSpecs`: the decoded identification ROM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">flushInput</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">ENQROM</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">ROM_SIZE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">5</span> <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">SOH</span> <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">EOT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">maker</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">DeviceSpecs</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">maker</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.in_videotex_mode"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.in_videotex_mode">[docs]</a>    <span class="k">def</span> <span class="nf">in_videotex_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tells if we are presently in Videotex mode.</span>
+
+<span class="sd">        Tries to probe the device. If it is not in Videotex, the Protocol</span>
+<span class="sd">        module is not here, and we will get no reply.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if in Videotex mode, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="Minitel.get_speeds"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.get_speeds">[docs]</a>    <span class="k">def</span> <span class="nf">get_speeds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the current teleinfo communication speed settings.</span>
+
+<span class="sd">        Teleinfo link speeds are symmetrical, so both values should be the same.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: send/received baudrates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">STATUS_SPEED</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">PRO2_LEN</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">send_speed</span> <span class="o">=</span> <span class="n">LinkSpeed</span><span class="o">.</span><span class="n">baudrate</span><span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="n">recv_speed</span> <span class="o">=</span> <span class="n">LinkSpeed</span><span class="o">.</span><span class="n">baudrate</span><span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">send_speed</span><span class="p">,</span> <span class="n">recv_speed</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_speed"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_speed">[docs]</a>    <span class="k">def</span> <span class="nf">set_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the communication link communication speed.</span>
+
+<span class="sd">        Send and receive speeds are set to the same value, since the teleinfo</span>
+<span class="sd">        link is symmetrical.</span>
+
+<span class="sd">        The provided value is automatically interpreted as a speed code or a baudrate if</span>
+<span class="sd">        it is a valid value for both cases. See :py:class:`LinkSpeed` for details.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            speed (int): baudrate or speed code</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if an invalid speed is provided</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">speed_code</span> <span class="o">=</span> <span class="n">LinkSpeed</span><span class="o">.</span><span class="n">code</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">prog_value</span> <span class="o">=</span> <span class="mh">0x40</span> <span class="o">|</span> <span class="p">(</span><span class="n">speed_code</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="n">speed_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">PROG</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">prog_value</span><span class="p">))</span>
+        <span class="c"># let the beast process the command</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">baudrate</span> <span class="o">=</span> <span class="n">LinkSpeed</span><span class="o">.</span><span class="n">baudrate</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_mode"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the Minitel mode.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            mode (int): the operating mode, selected among ``VIDEOTEX``, ``MIXED`` and ``TELEINFO``</span>
+<span class="sd">            force (bool): if True, the command is issued whatever is the current mode</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if a wrong mode is passed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># special case for initial mode setting</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_TRANSITIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">][</span><span class="n">mode</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid display mode&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">VIDEOTEX</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">videotex_graphic_mode</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activate_echo</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.videotex_graphic_mode"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.videotex_graphic_mode">[docs]</a>    <span class="k">def</span> <span class="nf">videotex_graphic_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activate</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Switches Videotex mode between graphics and text</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            activate (bool): True (default) to activate graphics mode</span>
+<span class="sd">            force (bool): True to ignore current mode and send the appropriate sequence anyway</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">force</span> <span class="ow">or</span> <span class="n">activate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vt_graphics</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">VideotexMode</span><span class="o">.</span><span class="n">GRAPHICS</span> <span class="k">if</span> <span class="n">activate</span> <span class="k">else</span> <span class="n">VideotexMode</span><span class="o">.</span><span class="n">TEXT</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vt_graphics</span> <span class="o">=</span> <span class="n">activate</span>
+</div>
+<div class="viewcode-block" id="Minitel.get_functional_status"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.get_functional_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_functional_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the current settings of the modules.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: caps lock state, roll mode, screen width</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">STATUS</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">PRO2_LEN</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">caps_lock</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x08</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">roll</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x02</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">)[</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x01</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">caps_lock</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">width</span>
+</div>
+<div class="viewcode-block" id="Minitel.is_w80"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.is_w80">[docs]</a>    <span class="k">def</span> <span class="nf">is_w80</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tells if the screen is currently in 80 chars width.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: is large screen currently active</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">TELEINFO</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">STATUS</span><span class="p">,</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">PRO2_LEN</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x01</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.get_screen_width"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.get_screen_width">[docs]</a>    <span class="k">def</span> <span class="nf">get_screen_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the width of the screen (in characters), depending on the</span>
+<span class="sd">        current mode.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: the width (40 or 80)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">80</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_w80</span><span class="p">()</span> <span class="k">else</span> <span class="mi">40</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_char_size"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_char_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_char_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines the size (width and height) of the characters in Videotex mode.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            width (int): character width (1 or 2)</span>
+<span class="sd">            height (int): character height (1 or 2)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if not in Videotex mode or in invalid width or height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;not in Videotex mode&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char_size_sequence</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Minitel.char_size_sequence"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.char_size_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">char_size_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the sequence for changing the size (width and height) of the characters</span>
+<span class="sd">        in Videotex mode.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            width (int): character width (1 or 2)</span>
+<span class="sd">            height (int): character height (1 or 2)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the sequence</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if invalid width or height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid width&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">height</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid height&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s">&#39;</span><span class="se">\x1b</span><span class="s">&#39;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x4c</span> <span class="o">+</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_text_style"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_text_style">[docs]</a>    <span class="k">def</span> <span class="nf">set_text_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blink</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">underscore</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bright</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the attributes for subsequently displayed text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_style_sequence</span><span class="p">(</span><span class="n">blink</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">underscore</span><span class="p">,</span> <span class="n">bright</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">text_style_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blink</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">underscore</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bright</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># will allow us to access the arguments by their names</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span>
+        <span class="c"># selects the text attributes sequence table for the current mode</span>
+        <span class="n">mode_attributes</span> <span class="o">=</span> <span class="n">TextAttribute</span><span class="o">.</span><span class="n">VIDEOTEX</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span> <span class="k">else</span> <span class="n">TextAttribute</span><span class="o">.</span><span class="n">TELEINFO</span>
+        <span class="c"># build the sequence corresponding to the attributes specified in the call and send it</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">mode_attributes</span><span class="p">[</span><span class="n">attr</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">mode_attributes</span> <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Minitel.set_text_normal"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_text_normal">[docs]</a>    <span class="k">def</span> <span class="nf">set_text_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reverts to normal text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_text_style</span><span class="p">(</span><span class="n">blink</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">underscore</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bright</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_charset"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_charset">[docs]</a>    <span class="k">def</span> <span class="nf">set_charset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Activates the charset (i.e. Gn) to be used for subsequent text display.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            num (int): the charset num (in range [0, 2])</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if passed number is out of range</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">SI</span><span class="p">,</span> <span class="n">SO</span><span class="p">,</span> <span class="n">SS2</span><span class="p">)[</span><span class="n">num</span><span class="p">])</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid charset num (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">num</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.clear_screen"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.clear_screen">[docs]</a>    <span class="k">def</span> <span class="nf">clear_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clears (a part of) the screen.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            part (int): which part should be cleared (among ``PART_xxx`` constants)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if part code is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">CSI</span> <span class="o">+</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">J&#39;</span> <span class="o">%</span> <span class="n">Part</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>     <span class="c"># needs some time to complete</span>
+</div>
+<div class="viewcode-block" id="Minitel.clear_status"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.clear_status">[docs]</a>    <span class="k">def</span> <span class="nf">clear_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clears the status line</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">US</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\x40\x41</span><span class="s">&#39;</span> <span class="o">+</span> <span class="n">CAN</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\x0a</span><span class="s">&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.clear_all"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.clear_all">[docs]</a>    <span class="k">def</span> <span class="nf">clear_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clears the whole screen, including the status line.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_status</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">clear_end_of_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clear_begin_of_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">BEGIN</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Minitel.clear_line"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.clear_line">[docs]</a>    <span class="k">def</span> <span class="nf">clear_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clears (a part of) the current line.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            part (int): which part should be cleared (among :py:class:``Part`` pre-defined constants)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if part code is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">CSI</span> <span class="o">+</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">K&#39;</span> <span class="o">%</span> <span class="n">Part</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">clear_end_of_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_line</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clear_begin_of_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_line</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="n">Part</span><span class="o">.</span><span class="n">BEGIN</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Minitel.newline"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.newline">[docs]</a>    <span class="k">def</span> <span class="nf">newline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends a newline/carriage return combo. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n\r</span><span class="s">&#39;</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">beep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">BEL</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Minitel.rlinput"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.rlinput">[docs]</a>    <span class="k">def</span> <span class="nf">rlinput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; User input with basic Gnu&#39;s readline features</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            max_length (int): max length of the input</span>
+<span class="sd">            marker (str): the char to be used as the input area filler</span>
+<span class="sd">            start_pos (tuple): input area start position (default: current one)</span>
+<span class="sd">            initial_value(str): the value of the input on entry</span>
+<span class="sd">            max_wait (int): maximum wait time in seconds for user to complete the input (if None, waits indefinitely)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: the entered value and the key used to terminate the entry. If the time limit has been reached,</span>
+<span class="sd">                the first item will be the characters entered so far and the second one will be None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">initial_value</span> <span class="o">=</span> <span class="n">initial_value</span> <span class="ow">or</span> <span class="s">&#39;&#39;</span>
+        <span class="n">chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">initial_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">flushInput</span><span class="p">()</span>
+
+        <span class="c"># define the field starting position</span>
+        <span class="k">if</span> <span class="n">start_pos</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">start_pos</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cursor_position</span><span class="p">()</span>
+
+        <span class="c"># display the initial content (if any) and put the cursor after it</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">initial_value</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">max_length</span><span class="p">,</span> <span class="n">marker</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_value</span><span class="p">),</span> <span class="n">y0</span><span class="p">)</span>
+
+        <span class="c"># handle user typed keys</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_wait</span> <span class="k">if</span> <span class="n">max_wait</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">SEP</span><span class="p">:</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="n">KeyCode</span><span class="o">.</span><span class="n">SEND</span><span class="p">,</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">NEXT</span><span class="p">,</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">PREV</span><span class="p">,</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">CONTENT</span><span class="p">):</span>
+                        <span class="k">break</span>
+                    <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">CORRECTION</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">chars</span><span class="p">:</span>
+                            <span class="k">del</span> <span class="n">chars</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">BS</span> <span class="o">+</span> <span class="n">marker</span> <span class="o">+</span> <span class="n">BS</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">CANCEL</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">chars</span><span class="p">:</span>
+                            <span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">marker</span> <span class="o">*</span> <span class="n">max_length</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="s">&#39;</span><span class="se">\x20</span><span class="s">&#39;</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="s">&#39;</span><span class="se">\x7a</span><span class="s">&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_length</span><span class="p">:</span>
+                        <span class="n">chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="n">CR</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+
+            <span class="c"># do not hog CPU</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">),</span> <span class="n">c</span>
+</div>
+<div class="viewcode-block" id="Minitel.input"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">input_start_xy</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get a user input from the Minitel.</span>
+
+<span class="sd">        Handles common editing actions, such as backspace and clear input.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            The serial link is flushed before waiting for the input.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            max_length (int): maximum length of entered text</span>
+<span class="sd">            prompt (tuple): optional prompt to display, as a (text, width, x, y) tuple</span>
+<span class="sd">            input_start_xy (tuple): x, y coordinates for input area start. If None, use the current position</span>
+<span class="sd">            max_wait (int): maximum wait time in seconds for user to complete the input (if None, waits indefinitely)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: the entered value and the key used to terminate the entry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prompt</span><span class="p">:</span>
+            <span class="n">text</span><span class="p">,</span> <span class="n">prompt_width</span><span class="p">,</span> <span class="n">prompt_x</span><span class="p">,</span> <span class="n">prompt_y</span> <span class="o">=</span> <span class="n">prompt</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">prompt_width</span><span class="p">)[:</span><span class="n">prompt_width</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">prompt_x</span><span class="p">,</span> <span class="n">prompt_y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">input_start_xy</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">input_start_xy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cursor_position</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_cursor</span><span class="p">()</span>
+        <span class="n">value</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rlinput</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="n">max_wait</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_cursor</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span>
+</div>
+<div class="viewcode-block" id="Minitel.wait_for_key"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.wait_for_key">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_set</span><span class="o">=</span><span class="p">(</span><span class="n">SEP</span> <span class="o">+</span> <span class="n">KeyCode</span><span class="o">.</span><span class="n">SEND</span><span class="p">,),</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Waits for the user to type any key in the provided set.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key_set (iterable): the list of the codes of the accepted keys</span>
+<span class="sd">            max_wait (int): maximum wait time in seconds (if None, waits indefinitely)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            char: the hit key, or None if nothing accepted has been typed in the given delay</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">special_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">seq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">key_set</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">normal_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">key_set</span><span class="p">)</span> <span class="o">-</span> <span class="n">special_keys</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">flushInput</span><span class="p">()</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_wait</span> <span class="k">if</span> <span class="n">max_wait</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">SEP</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">special_keys</span><span class="p">:</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">special_keys</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">SEP</span> <span class="o">+</span> <span class="n">c</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">normal_keys</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">c</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">beep</span><span class="p">()</span>
+
+            <span class="c"># no need to eat CPU cycles since the user will not type at light speed ;)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.display_text"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.display_text">[docs]</a>    <span class="k">def</span> <span class="nf">display_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clear_eol</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">clear_bol</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">char_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">char_height</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Displays a text at a given position of the screen, with various options.</span>
+
+<span class="sd">        The ``clear_xxx`` options provide convenient way to clear parts of the target</span>
+<span class="sd">        line while displaying the text.</span>
+
+<span class="sd">        The charset to be used can be customised. Same for the character size.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :py:meth:`set_charset`, :py:meth:`char_size_sequence`</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            text (str): the text to be displayed</span>
+<span class="sd">            x (int): horizontal position</span>
+<span class="sd">            y (int): vertical position</span>
+<span class="sd">            clear_eol (bool): if True the target line is cleared after the end of the displayed text</span>
+<span class="sd">            clear_bol (bool): if True the target line is cleared before the start end of the displayed text</span>
+<span class="sd">            charset (int): the charset to be used</span>
+<span class="sd">            width (int): character width (1 or 2)</span>
+<span class="sd">            height (int): character height (1 or 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_charset</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clear_bol</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_begin_of_line</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char_size_sequence</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">char_width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">char_height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clear_eol</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_end_of_line</span><span class="p">()</span>
+
+        <span class="c"># remember we are no more interpreting graphical characters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vt_graphics</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Minitel.display_text_center"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.display_text_center">[docs]</a>    <span class="k">def</span> <span class="nf">display_text_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">char_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">char_height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_char</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convenience method for displaying a centered text on a given line.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            pad_char (str): the string padding char. Default: &#39; &#39;</span>
+
+<span class="sd">        See :py:meth:`display_text` for the documentation of the other parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">40</span> <span class="k">if</span> <span class="n">char_width</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">20</span><span class="p">,</span> <span class="n">pad_char</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="n">charset</span><span class="p">,</span> <span class="n">char_width</span><span class="o">=</span><span class="n">char_width</span><span class="p">,</span> <span class="n">char_height</span><span class="o">=</span><span class="n">char_height</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.display_status"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.display_status">[docs]</a>    <span class="k">def</span> <span class="nf">display_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Displays a text in the status line.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            text (str): the text to display</span>
+<span class="sd">            x (int): the horizontal position in [0, 39] (default: 0)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if horizontal position is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">40</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">US</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\x40</span><span class="s">&#39;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x41</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">text</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\x0a</span><span class="s">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid X position (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;not available in current mode&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.activate_echo"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.activate_echo">[docs]</a>    <span class="k">def</span> <span class="nf">activate_echo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activate</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Activates or deactivates the local echo</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            activate (bool): True for local echo activation, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                <span class="n">Protocol</span><span class="o">.</span><span class="n">PRO3</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">ON</span> <span class="k">if</span> <span class="n">activate</span> <span class="k">else</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">OFF</span><span class="p">)</span> <span class="o">+</span>
+                <span class="n">ModuleCode</span><span class="o">.</span><span class="n">SCREEN_IN</span> <span class="o">+</span> <span class="n">ModuleCode</span><span class="o">.</span><span class="n">MODEM_OUT</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;not available in current mode&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.goto_xy"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.goto_xy">[docs]</a>    <span class="k">def</span> <span class="nf">goto_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Moves the cursor to the given 0 based coordinates.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            x (int): X (col) position</span>
+<span class="sd">            y (int): Y (line) position</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if coordinates are outside valid ranges</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">Y_MAX</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid Y position (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">40</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid X position (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">US</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x41</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x41</span> <span class="o">+</span> <span class="n">x</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid X position (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">CUP</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+
+        <span class="c"># seems to need some time to execute</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.cursor_home"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.cursor_home">[docs]</a>    <span class="k">def</span> <span class="nf">cursor_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Moves the cursor to the top-left corner of the screen.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto_xy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.get_cursor_position"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.get_cursor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_cursor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the current cursor position.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: X, Y coordinates as a tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">GET_POS</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span><span class="p">,</span> <span class="nb">ord</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span>
+</div>
+<div class="viewcode-block" id="Minitel.show_cursor"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.show_cursor">[docs]</a>    <span class="k">def</span> <span class="nf">show_cursor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the visibility of the cursor.</span>
+
+<span class="sd">        Ignored if not in Videotex mode.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            on (bool): True for showing the caret, False to hide it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">on</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\x11</span><span class="s">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\x14</span><span class="s">&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.set_colors"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.set_colors">[docs]</a>    <span class="k">def</span> <span class="nf">set_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the color of subsequently displayed text.</span>
+
+<span class="sd">        The color is translated to a gray level on a monochrome Minitel.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            fg (int): foreground color (if None, don&#39;t change it)</span>
+<span class="sd">            bg (int): background color (if None, don&#39;t change it)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError if color is out of range</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">fg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">fg</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">fg</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Foreground out of range: </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">fg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+                <span class="n">seq</span> <span class="o">+=</span> <span class="n">ESC</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x40</span> <span class="o">+</span> <span class="n">fg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">seq</span> <span class="o">+=</span> <span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">ATTR</span> <span class="o">%</span> <span class="o">+</span><span class="p">(</span><span class="mi">30</span> <span class="o">+</span> <span class="n">fg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fg</span> <span class="o">=</span> <span class="n">fg</span>
+
+        <span class="k">if</span> <span class="n">bg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">bg</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">bg</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Background out of range: </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">bg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_vt_mode</span><span class="p">:</span>
+                <span class="n">seq</span> <span class="o">+=</span> <span class="n">ESC</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0x50</span> <span class="o">+</span> <span class="n">bg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">seq</span> <span class="o">+=</span> <span class="n">TeleinfoCommand</span><span class="o">.</span><span class="n">ATTR</span> <span class="o">%</span> <span class="p">(</span><span class="mi">40</span> <span class="o">+</span> <span class="n">bg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bg</span> <span class="o">=</span> <span class="n">bg</span>
+
+        <span class="k">if</span> <span class="n">seq</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.reset"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Guess what...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">VIDEOTEX</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">PRO1</span> <span class="o">+</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">RESET</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">ESC</span> <span class="o">+</span> <span class="s">&#39;c&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Minitel.flush"><a class="viewcode-back" href="../../../core.html#pybot.minitel.core.Minitel.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Flushes the serial link (output direction).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

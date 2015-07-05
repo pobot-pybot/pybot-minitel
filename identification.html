@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.identification module &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="index.html"/>
+        <link rel="next" title="pybot.minitel.constants module" href="constants.html"/>
+        <link rel="prev" title="pybot.minitel.sequences module" href="sequences.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href=""><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/identification.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-pybot.minitel.identification">
+<span id="pybot-minitel-identification-module"></span><h1><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module<a class="headerlink" href="#module-pybot.minitel.identification" title="Permalink to this headline">¶</a></h1>
+<p>Minitel types and models identification.</p>
+<dl class="class">
+<dt id="pybot.minitel.identification.DeviceSpecs">
+<em class="property">class </em><code class="descclassname">pybot.minitel.identification.</code><code class="descname">DeviceSpecs</code><span class="sig-paren">(</span><em>model</em>, <em>maker</em>, <em>version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pybot/minitel/identification.html#DeviceSpecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.identification.DeviceSpecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Specifications of a given model.</p>
+<p>This class is a data holder for identification and capabilities of a model.
+Instances are created with the content of the device identification data
+as stored in ROM, which are decoded to provide a more human friendly version.</p>
+<p>The decoded information are available in the following attributes :</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">maker</span></code></li>
+<li><code class="docutils literal"><span class="pre">version</span></code></li>
+<li><code class="docutils literal"><span class="pre">model_specs</span></code></li>
+</ul>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pybot.minitel.identification.ModelSpecs" title="pybot.minitel.identification.ModelSpecs"><code class="xref py py-class docutils literal"><span class="pre">ModelSpecs</span></code></a> definition to know what is included in the
+model technical specifications</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; model code as stored in ROM</li>
+<li><strong>maker</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; maker code as stored in ROM</li>
+<li><strong>version</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; version as stored in ROM</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pybot.minitel.identification.ModelSpecs">
+<em class="property">class </em><code class="descclassname">pybot.minitel.identification.</code><code class="descname">ModelSpecs</code><span class="sig-paren">(</span><em>name</em>, <em>can_swap</em>, <em>kbd_type</em>, <em>baud</em>, <em>w80</em>, <em>chars</em><span class="sig-paren">)</span><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="method">
+<dt id="pybot.minitel.identification.ModelSpecs.__getnewargs__">
+<code class="descname">__getnewargs__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.__getnewargs__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self as a plain tuple.  Used by copy and pickle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.identification.ModelSpecs.__getstate__">
+<code class="descname">__getstate__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.__getstate__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude the OrderedDict from pickling</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.identification.ModelSpecs.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a nicely formatted representation string</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.baud">
+<code class="descname">baud</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.baud" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.can_swap">
+<code class="descname">can_swap</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.can_swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.chars">
+<code class="descname">chars</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.kbd_type">
+<code class="descname">kbd_type</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.kbd_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.name">
+<code class="descname">name</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybot.minitel.identification.ModelSpecs.w80">
+<code class="descname">w80</code><a class="headerlink" href="#pybot.minitel.identification.ModelSpecs.w80" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="constants.html" class="btn btn-neutral float-right" title="pybot.minitel.constants module">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sequences.html" class="btn btn-neutral" title="pybot.minitel.sequences module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

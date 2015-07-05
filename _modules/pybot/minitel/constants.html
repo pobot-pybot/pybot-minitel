@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.constants &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>pybot.minitel.constants</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for pybot.minitel.constants</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; Shared constants.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Eric Pascual&#39;</span>
+
+<span class="c"># General control codes</span>
+<span class="n">ESC</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x1b</span><span class="s">&#39;</span>
+<span class="n">SOH</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x01</span><span class="s">&#39;</span>
+<span class="n">EOT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x04</span><span class="s">&#39;</span>
+<span class="n">BEL</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x07</span><span class="s">&#39;</span>
+<span class="n">BS</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x08</span><span class="s">&#39;</span>
+<span class="n">CS</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x0c</span><span class="s">&#39;</span>
+<span class="n">CR</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x0d</span><span class="s">&#39;</span>
+<span class="n">SO</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x0e</span><span class="s">&#39;</span>
+<span class="n">SI</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x0f</span><span class="s">&#39;</span>
+<span class="n">CAN</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x18</span><span class="s">&#39;</span>
+<span class="n">SS2</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x19</span><span class="s">&#39;</span>
+<span class="n">US</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x1f</span><span class="s">&#39;</span>
+<span class="n">SEP</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x13</span><span class="s">&#39;</span>
+
+<span class="n">CSI</span> <span class="o">=</span> <span class="n">ESC</span> <span class="o">+</span> <span class="s">&#39;[&#39;</span>
+
+<span class="n">Y_MAX</span> <span class="o">=</span> <span class="mi">23</span>
+
+<span class="c"># Sequences table for special characters not present in default Videotex charset</span>
+<span class="n">U_TO_VT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">u&#39;£&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x23</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;°&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x30</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;±&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x31</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;←&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x2C</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;↑&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x2D</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;→&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x2E</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;↓&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x2F</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;¼&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x3C</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;½&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x3D</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;¾&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x3E</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;ç&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x4B\x63</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;’&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x4B\x27</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;à&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x41\x61</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;á&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x42\x61</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;â&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x43\x61</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ä&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x48\x61</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;è&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x41\x65</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;é&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x42\x65</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ê&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x43\x65</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ë&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x48\x65</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;ì&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x41\x69</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;í&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x42\x69</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;î&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x43\x69</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ï&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x48\x69</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;ò&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x41\x6F</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ó&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x42\x6F</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ô&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x43\x6F</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ö&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x48\x6F</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;ù&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x41\x75</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ú&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x42\x75</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;û&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x43\x75</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;ü&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x48\x75</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;Œ&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x6A</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;œ&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x7A</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="s">u&#39;ß&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x7B</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">u&#39;β&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\x19\x7B</span><span class="s">&#39;</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="KeyCode"><a class="viewcode-back" href="../../../constants.html#pybot.minitel.constants.KeyCode">[docs]</a><span class="k">class</span> <span class="nc">KeyCode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The codes sent by the special keys in **Videotex mode**.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SEND</span> <span class="o">=</span> <span class="n">ENVOI</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x41</span><span class="s">&#39;</span>
+    <span class="n">PREV</span> <span class="o">=</span> <span class="n">RETOUR</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x42</span><span class="s">&#39;</span>
+    <span class="n">REPEAT</span> <span class="o">=</span> <span class="n">REPETITION</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x43</span><span class="s">&#39;</span>
+    <span class="n">GUIDE</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x44</span><span class="s">&#39;</span>
+    <span class="n">CANCEL</span> <span class="o">=</span> <span class="n">ANNULATION</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x45</span><span class="s">&#39;</span>
+    <span class="n">CONTENT</span> <span class="o">=</span> <span class="n">SOMMAIRE</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x46</span><span class="s">&#39;</span>
+    <span class="n">CORRECTION</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x47</span><span class="s">&#39;</span>
+    <span class="n">NEXT</span> <span class="o">=</span> <span class="n">SUITE</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x48</span><span class="s">&#39;</span>
+
+</div>
+<div class="viewcode-block" id="ModuleCode"><a class="viewcode-back" href="../../../constants.html#pybot.minitel.constants.ModuleCode">[docs]</a><span class="k">class</span> <span class="nc">ModuleCode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The identifiers of the Minitel software modules.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SCREEN_IN</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x58</span><span class="s">&#39;</span>
+    <span class="n">KEYBOARD_IN</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x59</span><span class="s">&#39;</span>
+    <span class="n">MODEM_IN</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x5a</span><span class="s">&#39;</span>
+    <span class="n">PERI_INFO_IN</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x5b</span><span class="s">&#39;</span>
+
+    <span class="n">SCREEN_OUT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x50</span><span class="s">&#39;</span>
+    <span class="n">KEYBOARD_OUT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x51</span><span class="s">&#39;</span>
+    <span class="n">MODEM_OUT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x52</span><span class="s">&#39;</span>
+    <span class="n">PERI_INFO_OUT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\x53</span><span class="s">&#39;</span>
+
+</div>
+<div class="viewcode-block" id="LinkSpeed"><a class="viewcode-back" href="../../../constants.html#pybot.minitel.constants.LinkSpeed">[docs]</a><span class="k">class</span> <span class="nc">LinkSpeed</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The speed of the &quot;peri-info&quot; serial link.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CODES</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">BAUDRATES</span> <span class="o">=</span> <span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">4800</span><span class="p">,</span> <span class="mi">9600</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">baudrate</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">BAUDRATES</span><span class="p">:</span>
+            <span class="c"># if already a valid baudrate, return the passed value</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">BAUDRATES</span><span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">CODES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid speed code (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">CODES</span><span class="p">:</span>
+            <span class="c"># if already a valid speed code, return the passed value</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">CODES</span><span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">BAUDRATES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid baudrate (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Part"><a class="viewcode-back" href="../../../core.html#pybot.minitel.constants.Part">[docs]</a><span class="k">class</span> <span class="nc">Part</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A screen or line part.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">END</span><span class="p">,</span> <span class="n">BEGIN</span><span class="p">,</span> <span class="n">ALL</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">_all</span> <span class="o">=</span> <span class="p">(</span><span class="n">END</span><span class="p">,</span> <span class="n">BEGIN</span><span class="p">,</span> <span class="n">ALL</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">part</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">part</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Part</span><span class="o">.</span><span class="n">_all</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;invalid part code (</span><span class="si">%d</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="n">part</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">part</span>
+</pre></div></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
