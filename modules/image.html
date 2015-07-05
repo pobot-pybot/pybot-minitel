@@ -121,12 +121,49 @@
 <p>Based on phooky&#8217;s Minitel code (<a class="reference external" href="https://github.com/phooky/Minitel">https://github.com/phooky/Minitel</a>)</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">It depends on the availability of PIL.</p>
+<p class="last">It depends on the availability of PIL. If not installed, the class will be
+replaced by a fake one.</p>
 </div>
 <dl class="class">
 <dt id="pybot.minitel.image.VideotexImage">
 <em class="property">class </em><code class="descclassname">pybot.minitel.image.</code><code class="descname">VideotexImage</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pybot/minitel/image.html#VideotexImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.image.VideotexImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Image converter class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (<code class="xref py py-class docutils literal"><span class="pre">PIL.image</span></code>) &#8211; the image to be converted</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybot.minitel.image.VideotexImage.to_videotex">
+<code class="descname">to_videotex</code><span class="sig-paren">(</span><em>w=80</em>, <em>h=72</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pybot/minitel/image.html#VideotexImage.to_videotex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.image.VideotexImage.to_videotex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of strings, one for each line of characters
+in the converted image.</p>
+<p>The width and height are specified in sub-pixels, and are always rounded
+up to an even number (for x) or a multiple of 3 (for y).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>w</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; target image width (in sub-pixels)</li>
+<li><strong>h</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; target image height (in sub-pixels)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the Videotex sequence reproducing the image</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[str]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
