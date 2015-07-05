@@ -1,5 +1,5 @@
-``pybot.minitel.forms`` module
-==============================
+``pybot.minitel.forms``
+=======================
 
 .. automodule:: pybot.minitel.forms
 

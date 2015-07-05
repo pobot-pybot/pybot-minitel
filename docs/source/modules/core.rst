@@ -1,5 +1,5 @@
-``pybot.minitel.core`` module
-=============================
+``pybot.minitel.core``
+======================
 
 .. automodule:: pybot.minitel.core
     :members:

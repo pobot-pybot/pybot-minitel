@@ -1,5 +1,5 @@
-``pybot.minitel.image`` module
-==============================
+``pybot.minitel.image``
+=======================
 
 .. automodule:: pybot.minitel.image
 

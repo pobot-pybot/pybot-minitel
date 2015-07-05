@@ -202,4 +202,4 @@ view:
 	firefox $(BUILDDIR)/html/index.html &
 
 ghpublish: html
-	cd $(BUILDDIR)/html ; git commit -a -m "rebuilt docs" ; git push origin gh-pages
+	cd $(BUILDDIR)/html ; git add . ; git commit -m "rebuilt docs" ; git push origin gh-pages

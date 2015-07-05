@@ -1,4 +1,4 @@
-Welcome to pybot-minitel library documentation!
+Welcome to pybot-minitel package documentation!
 ===============================================
 
 A simple library for communication with Minitels in Python.
@@ -25,16 +25,11 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
 
-   core
-   forms
-   menu
-   image
-   asciiart
-   sequences
-   identification
-   constants
+   intro
+   modules
+   examples
 
 Indices and tables
 ------------------
@@ -43,3 +38,7 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+GitHub project
+--------------
+
+https://github.com/pobot-pybot/pybot-minitel

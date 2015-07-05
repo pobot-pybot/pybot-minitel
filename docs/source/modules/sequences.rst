@@ -1,5 +1,5 @@
-``pybot.minitel.sequences`` module
-==================================
+``pybot.minitel.sequences``
+===========================
 
 .. automodule:: pybot.minitel.sequences
     :members:

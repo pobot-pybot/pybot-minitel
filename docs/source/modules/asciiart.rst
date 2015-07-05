@@ -1,5 +1,5 @@
-``pybot.minitel.asciiart`` module
-=================================
+``pybot.minitel.asciiart``
+==========================
 
 .. automodule:: pybot.minitel.asciiart
 

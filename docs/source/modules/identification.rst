@@ -1,5 +1,5 @@
-``pybot.minitel.identification`` module
-=======================================
+``pybot.minitel.identification``
+================================
 
 .. automodule:: pybot.minitel.identification
     :members:

@@ -1,5 +1,5 @@
-``pybot.minitel.menu`` module
-=============================
+``pybot.minitel.menu``
+======================
 
 .. automodule:: pybot.minitel.menu
 
