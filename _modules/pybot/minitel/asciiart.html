@@ -65,14 +65,9 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#forms-and-menus">Forms and menus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#graphics">Graphics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
@@ -122,7 +117,7 @@
 <span class="kn">import</span> <span class="nn">constants</span>
 
 
-<div class="viewcode-block" id="AsciiArtImage"><a class="viewcode-back" href="../../../modules/asciiart.html#pybot.minitel.asciiart.AsciiArtImage">[docs]</a><span class="k">class</span> <span class="nc">AsciiArtImage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="AsciiArtImage"><a class="viewcode-back" href="../../../modules/graphics/asciiart.html#pybot.minitel.asciiart.AsciiArtImage">[docs]</a><span class="k">class</span> <span class="nc">AsciiArtImage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A pseudo image, composed of lines of ASCII characters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
@@ -140,7 +135,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span> <span class="o">=</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span> <span class="o">=</span> <span class="n">lines</span>
 
-<div class="viewcode-block" id="AsciiArtImage.display"><a class="viewcode-back" href="../../../modules/asciiart.html#pybot.minitel.asciiart.AsciiArtImage.display">[docs]</a>    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="AsciiArtImage.display"><a class="viewcode-back" href="../../../modules/graphics/asciiart.html#pybot.minitel.asciiart.AsciiArtImage.display">[docs]</a>    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Displays the image on a Minitel, at a given position.</span>
 
 <span class="sd">        Parameters:</span>

@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.asciiart &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Package modules" href="../../modules.html"/>
+        <link rel="next" title="pybot.minitel.image" href="image.html"/>
+        <link rel="prev" title="pybot.minitel.menu" href="../forms/menu.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#forms-and-menus">Forms and menus</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html#graphics">Graphics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../modules.html">Package modules</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/modules/graphics/asciiart.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-pybot.minitel.asciiart">
+<span id="pybot-minitel-asciiart"></span><h1><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code><a class="headerlink" href="#module-pybot.minitel.asciiart" title="Permalink to this headline">¶</a></h1>
+<p>Simple helper for managing character based images.</p>
+<dl class="class">
+<dt id="pybot.minitel.asciiart.AsciiArtImage">
+<em class="property">class </em><code class="descclassname">pybot.minitel.asciiart.</code><code class="descname">AsciiArtImage</code><span class="sig-paren">(</span><em>lines</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/asciiart.html#AsciiArtImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.asciiart.AsciiArtImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A pseudo image, composed of lines of ASCII characters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lines</strong> (<em>list of str</em>) &#8211; the ASCII chars composing the image, organized
+as a list of strings representing the lines of the image</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybot.minitel.asciiart.AsciiArtImage.display">
+<code class="descname">display</code><span class="sig-paren">(</span><em>mt</em>, <em>x=0</em>, <em>y=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/asciiart.html#AsciiArtImage.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.asciiart.AsciiArtImage.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the image on a Minitel, at a given position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mt</strong> (<code class="xref py py-class docutils literal"><span class="pre">core.Minitel</span></code>) &#8211; the Minitel instance</li>
+<li><strong>y</strong> (<em>x,</em>) &#8211; the coordinates of the target area (default: 0, 0)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="image.html" class="btn btn-neutral float-right" title="pybot.minitel.image">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../forms/menu.html" class="btn btn-neutral" title="pybot.minitel.menu"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

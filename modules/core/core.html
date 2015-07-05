@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.core &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Package modules" href="../../modules.html"/>
+        <link rel="next" title="pybot.minitel.identification" href="identification.html"/>
+        <link rel="prev" title="pybot.minitel.constants" href="constants.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#forms-and-menus">Forms and menus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#graphics">Graphics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../modules.html">Package modules</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/modules/core/core.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-pybot.minitel.core">
+<span id="pybot-minitel-core"></span><h1><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code><a class="headerlink" href="#module-pybot.minitel.core" title="Permalink to this headline">¶</a></h1>
+<p>Core classes for communicating with a Minitel.</p>
+<dl class="class">
+<dt id="pybot.minitel.core.Minitel">
+<em class="property">class </em><code class="descclassname">pybot.minitel.core.</code><code class="descname">Minitel</code><span class="sig-paren">(</span><em>port=None</em>, <em>baud=4800</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Represents a Minitel beast.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">tested only with a Philips Minitel 2</p>
+</div>
+<p>The serial port to be used can be either a string such as <code class="docutils literal"><span class="pre">/dev/ttyUSB0</span></code>
+or an instance of <code class="xref py py-class docutils literal"><span class="pre">serial.Serial</span></code>. In this case, the port is automatically
+opened if not yet done.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When providing a port instance, beware to have it initialized
+with even parity and 7 data bytes.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>port</strong> (str or <code class="xref py py-class docutils literal"><span class="pre">serial.Serial</span></code>) &#8211; serial port identification or serial port instance</li>
+<li><strong>baud</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; baud rate (default: 4800)</li>
+<li><strong>debug</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, communications are traced</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if port is not specified.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> &#8211;
+if the port type is not one of the expected ones</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.activate_echo">
+<code class="descname">activate_echo</code><span class="sig-paren">(</span><em>activate=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.activate_echo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.activate_echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates or deactivates the local echo
+:param activate: True for local echo activation, False otherwise</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.char_size_sequence">
+<code class="descname">char_size_sequence</code><span class="sig-paren">(</span><em>width=1</em>, <em>height=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.char_size_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.char_size_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sequence for changing the size (width and height) of the characters
+in Videotex mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character width (1 or 2)</li>
+<li><strong>height</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character height (1 or 2)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the sequence</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)">str</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if invalid width or height</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.clear_all">
+<code class="descname">clear_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.clear_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.clear_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the whole screen, including the status line.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.clear_line">
+<code class="descname">clear_line</code><span class="sig-paren">(</span><em>part=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.clear_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.clear_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears (a part of) the current line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>part</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; which part should be cleared (among :py:class:<code class="docutils literal"><span class="pre">Part</span></code> pre-defined constants)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if part code is invalid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.clear_screen">
+<code class="descname">clear_screen</code><span class="sig-paren">(</span><em>part=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.clear_screen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.clear_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears (a part of) the screen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>part</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; which part should be cleared (among <code class="docutils literal"><span class="pre">PART_xxx</span></code> constants)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if part code is invalid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.clear_status">
+<code class="descname">clear_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.clear_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.clear_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the status line</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the communication.</p>
+<p>Should be invoked only when the instance is no more needed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.cursor_home">
+<code class="descname">cursor_home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.cursor_home"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.cursor_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the cursor to the top-left corner of the screen.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.display_status">
+<code class="descname">display_status</code><span class="sig-paren">(</span><em>text</em>, <em>x=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.display_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.display_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a text in the status line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the text to display</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the horizontal position in [0, 39] (default: 0)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if horizontal position is invalid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.display_text">
+<code class="descname">display_text</code><span class="sig-paren">(</span><em>text</em>, <em>x=0</em>, <em>y=0</em>, <em>clear_eol=False</em>, <em>clear_bol=False</em>, <em>charset=0</em>, <em>char_width=1</em>, <em>char_height=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.display_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.display_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a text at a given position of the screen, with various options.</p>
+<p>The <code class="docutils literal"><span class="pre">clear_xxx</span></code> options provide convenient way to clear parts of the target
+line while displaying the text.</p>
+<p>The charset to be used can be customised. Same for the character size.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pybot.minitel.core.Minitel.set_charset" title="pybot.minitel.core.Minitel.set_charset"><code class="xref py py-meth docutils literal"><span class="pre">set_charset()</span></code></a>, <a class="reference internal" href="#pybot.minitel.core.Minitel.char_size_sequence" title="pybot.minitel.core.Minitel.char_size_sequence"><code class="xref py py-meth docutils literal"><span class="pre">char_size_sequence()</span></code></a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the text to be displayed</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; horizontal position</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; vertical position</li>
+<li><strong>clear_eol</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True the target line is cleared after the end of the displayed text</li>
+<li><strong>clear_bol</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True the target line is cleared before the start end of the displayed text</li>
+<li><strong>charset</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the charset to be used</li>
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character width (1 or 2)</li>
+<li><strong>height</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character height (1 or 2)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.display_text_center">
+<code class="descname">display_text_center</code><span class="sig-paren">(</span><em>text</em>, <em>y=0</em>, <em>charset=0</em>, <em>char_width=1</em>, <em>char_height=1</em>, <em>pad_char=' '</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.display_text_center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.display_text_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for displaying a centered text on a given line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pad_char</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the string padding char. Default: &#8216; &#8216;</td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference internal" href="#pybot.minitel.core.Minitel.display_text" title="pybot.minitel.core.Minitel.display_text"><code class="xref py py-meth docutils literal"><span class="pre">display_text()</span></code></a> for the documentation of the other parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flushes the serial link (output direction).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.get_cursor_position">
+<code class="descname">get_cursor_position</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.get_cursor_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.get_cursor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current cursor position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">X, Y coordinates as a tuple</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.get_functional_status">
+<code class="descname">get_functional_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.get_functional_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.get_functional_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current settings of the modules.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">caps lock state, roll mode, screen width</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.get_screen_width">
+<code class="descname">get_screen_width</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.get_screen_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.get_screen_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the width of the screen (in characters), depending on the
+current mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the width (40 or 80)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.get_speeds">
+<code class="descname">get_speeds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.get_speeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.get_speeds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current teleinfo communication speed settings.</p>
+<p>Teleinfo link speeds are symmetrical, so both values should be the same.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">send/received baudrates</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.goto_xy">
+<code class="descname">goto_xy</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.goto_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.goto_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the cursor to the given 0 based coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; X (col) position</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Y (line) position</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if coordinates are outside valid ranges</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.in_videotex_mode">
+<code class="descname">in_videotex_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.in_videotex_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.in_videotex_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells if we are presently in Videotex mode.</p>
+<p>Tries to probe the device. If it is not in Videotex, the Protocol
+module is not here, and we will get no reply.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if in Videotex mode, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.input">
+<code class="descname">input</code><span class="sig-paren">(</span><em>max_length=40</em>, <em>prompt=None</em>, <em>input_start_xy=None</em>, <em>marker=' '</em>, <em>max_wait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a user input from the Minitel.</p>
+<p>Handles common editing actions, such as backspace and clear input.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The serial link is flushed before waiting for the input.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_length</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum length of entered text</li>
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)"><em>tuple</em></a>) &#8211; optional prompt to display, as a (text, width, x, y) tuple</li>
+<li><strong>input_start_xy</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)"><em>tuple</em></a>) &#8211; x, y coordinates for input area start. If None, use the current position</li>
+<li><strong>max_wait</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum wait time in seconds for user to complete the input (if None, waits indefinitely)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the entered value and the key used to terminate the entry</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.is_w80">
+<code class="descname">is_w80</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.is_w80"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.is_w80" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells if the screen is currently in 80 chars width.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">is large screen currently active</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.newline">
+<code class="descname">newline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.newline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.newline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a newline/carriage return combo.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.probe">
+<code class="descname">probe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.probe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.probe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the content of the identification ROM and returns it in a
+decoded form.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">class:<cite>DeviceSpecs</cite>: the decoded identification ROM</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">:py</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.receive">
+<code class="descname">receive</code><span class="sig-paren">(</span><em>count=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.receive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.receive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receives a given count of bytes from the Minitel.</p>
+<p>Does not wait for data, but returns whats is currently available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the expected count of bytes (default: 1)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the received bytes</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.request">
+<code class="descname">request</code><span class="sig-paren">(</span><em>command</em>, <em>reply_size</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a request and returns its reply.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The serial input link is flushed before issuing the request to be sure
+that the returned value will not contain data remaining from previous
+communications. This means that such data will be lost.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the command to be sent</li>
+<li><strong>reply_size</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the size of the expected reply</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the reply</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)">str</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guess what...</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.rlinput">
+<code class="descname">rlinput</code><span class="sig-paren">(</span><em>max_length=40</em>, <em>marker=' '</em>, <em>start_pos=None</em>, <em>initial_value=None</em>, <em>max_wait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.rlinput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.rlinput" title="Permalink to this definition">¶</a></dt>
+<dd><p>User input with basic Gnu&#8217;s readline features</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_length</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; max length of the input</li>
+<li><strong>marker</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the char to be used as the input area filler</li>
+<li><strong>start_pos</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)"><em>tuple</em></a>) &#8211; input area start position (default: current one)</li>
+<li><strong>initial_value</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the value of the input on entry</li>
+<li><strong>max_wait</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum wait time in seconds for user to complete the input (if None, waits indefinitely)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the entered value and the key used to terminate the entry. If the time limit has been reached,
+the first item will be the characters entered so far and the second one will be None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends data to the Minitel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the data to be sent</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_char_size">
+<code class="descname">set_char_size</code><span class="sig-paren">(</span><em>width=1</em>, <em>height=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_char_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_char_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the size (width and height) of the characters in Videotex mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character width (1 or 2)</li>
+<li><strong>height</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; character height (1 or 2)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if not in Videotex mode or in invalid width or height</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_charset">
+<code class="descname">set_charset</code><span class="sig-paren">(</span><em>num=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_charset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_charset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activates the charset (i.e. Gn) to be used for subsequent text display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the charset num (in range [0, 2])</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if passed number is out of range</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_colors">
+<code class="descname">set_colors</code><span class="sig-paren">(</span><em>fg=None</em>, <em>bg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the color of subsequently displayed text.</p>
+<p>The color is translated to a gray level on a monochrome Minitel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fg</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; foreground color (if None, don&#8217;t change it)</li>
+<li><strong>bg</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; background color (if None, don&#8217;t change it)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError if color is out of range</strong> &#8211;</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_mode">
+<code class="descname">set_mode</code><span class="sig-paren">(</span><em>mode</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the Minitel mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the operating mode, selected among <code class="docutils literal"><span class="pre">VIDEOTEX</span></code>, <code class="docutils literal"><span class="pre">MIXED</span></code> and <code class="docutils literal"><span class="pre">TELEINFO</span></code></li>
+<li><strong>force</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, the command is issued whatever is the current mode</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if a wrong mode is passed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_speed">
+<code class="descname">set_speed</code><span class="sig-paren">(</span><em>speed</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the communication link communication speed.</p>
+<p>Send and receive speeds are set to the same value, since the teleinfo
+link is symmetrical.</p>
+<p>The provided value is automatically interpreted as a speed code or a baudrate if
+it is a valid value for both cases. See <code class="xref py py-class docutils literal"><span class="pre">LinkSpeed</span></code> for details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>speed</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; baudrate or speed code</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if an invalid speed is provided</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_text_normal">
+<code class="descname">set_text_normal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_text_normal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_text_normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverts to normal text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.set_text_style">
+<code class="descname">set_text_style</code><span class="sig-paren">(</span><em>blink=None</em>, <em>inverse=None</em>, <em>underscore=None</em>, <em>bright=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.set_text_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.set_text_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the attributes for subsequently displayed text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.show_cursor">
+<code class="descname">show_cursor</code><span class="sig-paren">(</span><em>on=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.show_cursor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.show_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the visibility of the cursor.</p>
+<p>Ignored if not in Videotex mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>on</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; True for showing the caret, False to hide it</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.videotex_graphic_mode">
+<code class="descname">videotex_graphic_mode</code><span class="sig-paren">(</span><em>activate=True</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.videotex_graphic_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.videotex_graphic_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switches Videotex mode between graphics and text</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>activate</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; True (default) to activate graphics mode</li>
+<li><strong>force</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; True to ignore current mode and send the appropriate sequence anyway</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.core.Minitel.wait_for_key">
+<code class="descname">wait_for_key</code><span class="sig-paren">(</span><em>key_set=('\x13A'</em>, <em>)</em>, <em>max_wait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/core.html#Minitel.wait_for_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Minitel.wait_for_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the user to type any key in the provided set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key_set</strong> (<em>iterable</em>) &#8211; the list of the codes of the accepted keys</li>
+<li><strong>max_wait</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum wait time in seconds (if None, waits indefinitely)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the hit key, or None if nothing accepted has been typed in the given delay</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">char</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pybot.minitel.core.Part">
+<em class="property">class </em><code class="descclassname">pybot.minitel.core.</code><code class="descname">Part</code><a class="reference internal" href="../../_modules/pybot/minitel/constants.html#Part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.core.Part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A screen or line part.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="identification.html" class="btn btn-neutral float-right" title="pybot.minitel.identification">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="constants.html" class="btn btn-neutral" title="pybot.minitel.constants"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

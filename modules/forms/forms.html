@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.forms &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Package modules" href="../../modules.html"/>
+        <link rel="next" title="pybot.minitel.menu" href="menu.html"/>
+        <link rel="prev" title="pybot.minitel.sequences" href="../core/sequences.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#core">Core</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html#forms-and-menus">Forms and menus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#graphics">Graphics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../modules.html">Package modules</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/modules/forms/forms.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-pybot.minitel.forms">
+<span id="pybot-minitel-forms"></span><h1><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code><a class="headerlink" href="#module-pybot.minitel.forms" title="Permalink to this headline">¶</a></h1>
+<p>A simple Minitel forms management toolkit.</p>
+<dl class="class">
+<dt id="pybot.minitel.forms.Form">
+<em class="property">class </em><code class="descclassname">pybot.minitel.forms.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>mt</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Defines the forms in terms of layout and field connection with the application.</p>
+<p>A form is made of static prompts and entry fields. The class handles its rendering
+and the management of user interactions when modifying its content.</p>
+<p>The definition of the form can be provided by calls to <a class="reference internal" href="#pybot.minitel.forms.Form.add_prompt" title="pybot.minitel.forms.Form.add_prompt"><code class="xref py py-meth docutils literal"><span class="pre">add_prompt()</span></code></a> and
+<a class="reference internal" href="#pybot.minitel.forms.Form.add_field" title="pybot.minitel.forms.Form.add_field"><code class="xref py py-meth docutils literal"><span class="pre">add_field()</span></code></a>. This can also be done by loading the equivalent JSON data
+structure, using <a class="reference internal" href="#pybot.minitel.forms.Form.load_definition" title="pybot.minitel.forms.Form.load_definition"><code class="xref py py-meth docutils literal"><span class="pre">load_definition()</span></code></a>.</p>
+<p>For convenience, the <a class="reference internal" href="#pybot.minitel.forms.Form.dump_definition" title="pybot.minitel.forms.Form.dump_definition"><code class="xref py py-meth docutils literal"><span class="pre">dump_definition()</span></code></a> does the reverse operation, which
+allows producing the JSON data directly from the current definition of the form.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The class is intended to be used in Videotex mode. Maybe it works fine in
+Teleinfo mode too, but it has not been tested. By the way, to ensure all
+goes well, the Minitel is switched in Videotex mode when rendering forms.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mt</strong> (<code class="xref py py-class docutils literal"><span class="pre">Minitel</span></code>) &#8211; the Minitel instance</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.add_field">
+<code class="descname">add_field</code><span class="sig-paren">(</span><em>name</em>, <em>x</em>, <em>y</em>, <em>size</em>, <em>marker='.'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.add_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.add_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a field to the form, at a given position and with a given size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the field name</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; X coordinate of the prompt start position</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Y coordinate of the prompt start position</li>
+<li><strong>size</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the field size</li>
+<li><strong>marker</strong> (<em>char</em>) &#8211; the character used to mark the fields area (default: &#8216;.&#8217;)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.add_prompt">
+<code class="descname">add_prompt</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.add_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.add_prompt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a fixed text to the form, at a given position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; X coordinate of the prompt start position</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Y coordinate of the prompt start position</li>
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the prompt text (can include an attributes sequence)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.dump_definition">
+<code class="descname">dump_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.dump_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.dump_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the form current definition as a JSON formatted structure.</p>
+<p>The returned structure is a dictionary, containing the two top-level entries <code class="docutils literal"><span class="pre">prompts</span></code>
+and <code class="docutils literal"><span class="pre">fields</span></code>.</p>
+<p>The value of the <code class="docutils literal"><span class="pre">prompts</span></code> entry is a list of tuples, composed of :</p>
+<blockquote>
+<div><ul class="simple">
+<li>the X position</li>
+<li>the Y position</li>
+<li>the prompt text</li>
+</ul>
+</div></blockquote>
+<p>The value of the <code class="docutils literal"><span class="pre">fields</span></code> entry is a sub-dictionary, keyed by the field names, and which
+values are tuples, composed of :</p>
+<blockquote>
+<div><ul class="simple">
+<li>the X position</li>
+<li>the Y position</li>
+<li>the size (in characters)</li>
+<li>the marker character (defaulted to <code class="docutils literal"><span class="pre">.</span></code> if not included)</li>
+</ul>
+</div></blockquote>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;prompts&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;First name&quot;</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&quot;Last name&quot;</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="s">&quot;ENVOI&quot;</span><span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s">&quot;fields&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;lname&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">&quot;.&quot;</span><span class="p">],</span>
+        <span class="s">&quot;fname&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">&quot;.&quot;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON form definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.input">
+<code class="descname">input</code><span class="sig-paren">(</span><em>content=None</em>, <em>max_wait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles user interactions and return the fields content if the form is submitted.</p>
+<p>The cursor is made visible on start, and hidden back when exiting.</p>
+<p>Special keys are interpreted as follows :</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">ENVOI</span></code> (SEND)</dt>
+<dd>submits the form, returning the fields content as a dictionary</dd>
+<dt><code class="docutils literal"><span class="pre">SOMMAIRE</span></code> (CONTENT)</dt>
+<dd>cancels and returns None</dd>
+<dt><code class="docutils literal"><span class="pre">RETOUR</span></code> (BACK)</dt>
+<dd>jumps to the previous field (or to the last one if current on the first one)</dd>
+<dt><code class="docutils literal"><span class="pre">SUITE</span></code> (NEXT)</dt>
+<dd>jumps to the next field (or to the first one if current on the last one)</dd>
+<dt><code class="docutils literal"><span class="pre">CORRECTION</span></code></dt>
+<dd>backspaces one character in the field</dd>
+<dt><code class="docutils literal"><span class="pre">ANNULATION</span></code> (CANCEL)</dt>
+<dd>clears the field</dd>
+</dl>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; optional dictionary containing the initial field values</li>
+<li><strong>max_wait</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum wait time in seconds for filling and validating the form
+(if None, waits indefinitely)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the fields content if the form has been submitted, None otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.load_definition">
+<code class="descname">load_definition</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.load_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.load_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the form definition from the provided JSON structure.</p>
+<p>Refer to <a class="reference internal" href="#pybot.minitel.forms.Form.dump_definition" title="pybot.minitel.forms.Form.dump_definition"><code class="xref py py-meth docutils literal"><span class="pre">dump_definition()</span></code></a> documentation for the structure
+specifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the form definition in JSON format</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+if no data or invalid JSON data provided</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.prepare">
+<code class="descname">prepare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the form by sorting the prompts and fields according to
+their position.</p>
+<p>Is automatically invoked by <a class="reference internal" href="#pybot.minitel.forms.Form.render" title="pybot.minitel.forms.Form.render"><code class="xref py py-meth docutils literal"><span class="pre">render()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders the form on the screen.</p>
+<p>Should normally be invoked before calling <a class="reference internal" href="#pybot.minitel.forms.Form.input" title="pybot.minitel.forms.Form.input"><code class="xref py py-meth docutils literal"><span class="pre">input()</span></code></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The Minitel is switched in Videotex mode before processing.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; optional dictionary containing the initial field values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybot.minitel.forms.Form.render_and_input">
+<code class="descname">render_and_input</code><span class="sig-paren">(</span><em>content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pybot/minitel/forms.html#Form.render_and_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.forms.Form.render_and_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>A shortcut for the render / input sequence.</p>
+<p>Refer to <a class="reference internal" href="#pybot.minitel.forms.Form.render" title="pybot.minitel.forms.Form.render"><code class="xref py py-meth docutils literal"><span class="pre">render()</span></code></a> and <a class="reference internal" href="#pybot.minitel.forms.Form.input" title="pybot.minitel.forms.Form.input"><code class="xref py py-meth docutils literal"><span class="pre">input()</span></code></a> for documentation of the parameters
+and return value.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="menu.html" class="btn btn-neutral float-right" title="pybot.minitel.menu">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../core/sequences.html" class="btn btn-neutral" title="pybot.minitel.sequences"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
