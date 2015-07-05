@@ -1,5 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+""" Simple helper for managing character based images.
+"""
 
 __author__ = 'Eric Pascual'
 
@@ -7,6 +9,8 @@ import constants
 
 
 class AsciiArtImage(object):
+    """ A pseudo image, composed of lines of ASCII characters.
+    """
     def __init__(self, lines):
         """
         Parameters:
