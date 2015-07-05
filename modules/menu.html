@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pybot.minitel.menu &mdash; PyBot-minitel 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PyBot-minitel 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Package modules" href="../modules.html"/>
+        <link rel="next" title="pybot.minitel.sequences" href="sequences.html"/>
+        <link rel="prev" title="pybot.minitel.image" href="image.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> PyBot-minitel</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href=""><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">PyBot-minitel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../modules.html">Package modules</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/modules/menu.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-pybot.minitel.menu">
+<span id="pybot-minitel-menu"></span><h1><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code><a class="headerlink" href="#module-pybot.minitel.menu" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pybot.minitel.menu.Menu">
+<em class="property">class </em><code class="descclassname">pybot.minitel.menu.</code><code class="descname">Menu</code><span class="sig-paren">(</span><em>mt</em>, <em>title</em>, <em>choices</em>, <em>prompt=None</em>, <em>line_skip=0</em>, <em>margin_top=0</em>, <em>prompt_line=None</em>, <em>addit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pybot/minitel/menu.html#Menu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.menu.Menu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Displays a menu with choices and handles the user input.</p>
+<p>The input is checked against the list of selectable options, the
+menu staying displayed until a valid one is entered.</p>
+<p>Canceling is possible by using the SOMMAIRE (content) key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mt</strong> (<code class="xref py py-class docutils literal"><span class="pre">Minitel</span></code>) &#8211; the Minitel instance</li>
+<li><strong>title</strong> (<em>str or list of str</em>) &#8211; the menu title, displayed centered on the screen</li>
+<li><strong>choices</strong> (<em>list of str</em>) &#8211; the options</li>
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the prompt displayed with the input field. Default: &#8220;Your choice&#8221;</li>
+<li><strong>line_skip</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; vertical space between options. Default (0) places options on consecutive lines</li>
+<li><strong>margin_top</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; vertical space before the menu title. Default: 0</li>
+<li><strong>prompt_line</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; line number on which the input prompt is displayed</li>
+<li><strong>addit</strong> (<em>list of tuple</em>) &#8211; additional prompts as a list of (x, y, text) tuples</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybot.minitel.menu.Menu.get_choice">
+<code class="descname">get_choice</code><span class="sig-paren">(</span><em>max_wait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pybot/minitel/menu.html#Menu.get_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybot.minitel.menu.Menu.get_choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the user input and returns it.</p>
+<p>The entered value is checked against the number of options, and rejected if not valid.
+Input can be cancelled by using the <cite>SOMMAIRE</cite> key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_wait</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum wait time in seconds for selecting an option (if None, waits indefinitely)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the option number (starting from 1) or None if input has been canceled</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sequences.html" class="btn btn-neutral float-right" title="pybot.minitel.sequences">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="image.html" class="btn btn-neutral" title="pybot.minitel.image"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Eric Pascual.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

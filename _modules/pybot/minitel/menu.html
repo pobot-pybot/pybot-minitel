@@ -63,14 +63,19 @@
           
           
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code> module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/asciiart.html"><code class="docutils literal"><span class="pre">pybot.minitel.asciiart</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/constants.html"><code class="docutils literal"><span class="pre">pybot.minitel.constants</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/core.html"><code class="docutils literal"><span class="pre">pybot.minitel.core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/forms.html"><code class="docutils literal"><span class="pre">pybot.minitel.forms</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/identification.html"><code class="docutils literal"><span class="pre">pybot.minitel.identification</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/image.html"><code class="docutils literal"><span class="pre">pybot.minitel.image</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/menu.html"><code class="docutils literal"><span class="pre">pybot.minitel.menu</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/sequences.html"><code class="docutils literal"><span class="pre">pybot.minitel.sequences</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 
           
@@ -116,7 +121,7 @@
 <span class="kn">from</span> <span class="nn">forms</span> <span class="kn">import</span> <span class="n">Form</span>
 
 
-<div class="viewcode-block" id="Menu"><a class="viewcode-back" href="../../../menu.html#pybot.minitel.menu.Menu">[docs]</a><span class="k">class</span> <span class="nc">Menu</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Menu"><a class="viewcode-back" href="../../../modules/menu.html#pybot.minitel.menu.Menu">[docs]</a><span class="k">class</span> <span class="nc">Menu</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Displays a menu with choices and handles the user input.</span>
 
 <span class="sd">    The input is checked against the list of selectable options, the</span>
@@ -185,7 +190,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_form</span> <span class="o">=</span> <span class="n">form</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_choice_max</span> <span class="o">=</span> <span class="n">choice_max</span>
 
-<div class="viewcode-block" id="Menu.get_choice"><a class="viewcode-back" href="../../../menu.html#pybot.minitel.menu.Menu.get_choice">[docs]</a>    <span class="k">def</span> <span class="nf">get_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Menu.get_choice"><a class="viewcode-back" href="../../../modules/menu.html#pybot.minitel.menu.Menu.get_choice">[docs]</a>    <span class="k">def</span> <span class="nf">get_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Waits for the user input and returns it.</span>
 
 <span class="sd">        The entered value is checked against the number of options, and rejected if not valid.</span>
