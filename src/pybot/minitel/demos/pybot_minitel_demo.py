@@ -1,24 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Eric Pascual'
-
 import argparse
 import inspect
 import textwrap
 import logging
 import time
 import os
+import sys
 
 try:
     from PIL import Image
 except ImportError:
     Image = None
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(levelname).1s] %(name)s: %(message)s"
-)
 
 from pybot.minitel import Minitel
 from pybot.minitel.forms import Form
@@ -26,18 +20,25 @@ from pybot.minitel.image import VideotexImage
 from pybot.minitel.asciiart import AsciiArtImage
 from pybot.minitel.menu import Menu
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(levelname).1s] %(name)s: %(message)s"
+)
 
-class NoSuchTestError(Exception):
+__author__ = 'Eric Pascual'
+
+
+class NoSuchDemoError(Exception):
     pass
 
 
 class Runner(object):
     @classmethod
-    def get_tests_list(cls):
+    def get_demos_list(cls):
         return (
             (n[5:], m.__doc__.strip().split('\n')[0] if m.__doc__ else "(no description)")
             for n, m in inspect.getmembers(cls, inspect.ismethod)
-            if n.startswith('test_')
+            if n.startswith('demo_')
         )
 
     def __init__(self, cli_args):
@@ -46,12 +47,12 @@ class Runner(object):
         self.data_dir = os.path.join(self.script_path, 'data')
         self.images_dir = os.path.join(self.data_dir, 'img')
 
-    def run_test(self, test_name, test_opts=None):
-        method_name = 'test_' + test_name
+    def run_demo(self, demo_name, demo_opts=None):
+        method_name = 'demo_' + demo_name
         try:
             method = getattr(self, method_name)
         except AttributeError:
-            raise NoSuchTestError(test_name)
+            raise NoSuchDemoError(demo_name)
         else:
             try:
                 mt = Minitel(port=self._args.port, baud=self._args.baud, debug=self._args.debug)
@@ -68,14 +69,14 @@ class Runner(object):
                 mt.display_status(mt.text_style_sequence(inverse=True) + "PyBot Minitel demonstration".ljust(40))
                 mt.cursor_home()
                 try:
-                    method(mt, test_opts)
+                    method(mt, demo_opts)
 
                 finally:
                     mt.clear_all()
                     mt.display_status("I'll be back...")
                     mt.close()
 
-    def test_display_attrs(self, mt, opts):
+    def demo_display_attrs(self, mt, opts):
         """ displays text with various attributes
 
         :param minitel.Minitel mt: the Minitel instance
@@ -97,7 +98,7 @@ class Runner(object):
 
         time.sleep(10)
 
-    def test_image(self, mt, opts):
+    def demo_image(self, mt, opts):
         """ converts and display an image
         """
         if not Image:
@@ -105,7 +106,7 @@ class Runner(object):
             return
 
         mt.clear_screen()
-        for img_name in os.listdir(self.images_dir):
+        for img_name in (n for n in os.listdir(self.images_dir) if n.endswith('.png')):
             img = Image.open(os.path.join(self.images_dir, img_name))
             vt_img = VideotexImage(img)
             code = vt_img.to_videotex()
@@ -116,7 +117,7 @@ class Runner(object):
             mt.display_text('ENVOI', 34, 23)
             mt.wait_for_key(max_wait=60)
 
-    def test_asciiart(self, mt, opts):
+    def demo_asciiart(self, mt, opts):
         """ loads and display an ASCII art image
         """
         mt.clear_screen()
@@ -128,7 +129,7 @@ class Runner(object):
             mt.display_text('ENVOI', 34, 23)
             mt.wait_for_key(max_wait=60)
 
-    def test_youpi(self, mt, opts):
+    def demo_youpi(self, mt, opts):
         """ Youpi 2.0 demo home screen
         """
         if not Image:
@@ -158,7 +159,7 @@ class Runner(object):
 
         mt.wait_for_key(max_wait=_args.wait)
 
-    def test_input(self, mt, opts):
+    def demo_input(self, mt, opts):
         """ gets a user input
         """
         prompt_x, prompt_y = (0, 3)
@@ -170,14 +171,14 @@ class Runner(object):
             mt.display_text("I'm a poor lonesome Minitel :(", *greetings_pos)
         time.sleep(10)
 
-    def test_status_line(self, mt, opts):
+    def demo_status_line(self, mt, opts):
         """ displays text on the status (top most) line
         """
         mt.display_status(mt.text_style_sequence(inverse=True) + "I'm in status line".ljust(40))
         mt.display_text("And I'm in normal area")
         time.sleep(10)
 
-    def test_probe(self, mt, opts):
+    def demo_probe(self, mt, opts):
         """ probes device and display settings.
 
         :param minitel.Minitel mt: the device
@@ -219,7 +220,7 @@ class Runner(object):
             speed, caps_lock, roll, width
         ))
 
-    def test_form(self, mt, opts):
+    def demo_form(self, mt, opts):
         """ displays a hard-coded form
         """
         form = Form(mt)
@@ -233,7 +234,7 @@ class Runner(object):
         content = form.render_and_input({'fname': 'Eric'})
         print('form content: %s' % content)
 
-    def test_menu(self, mt, opts):
+    def demo_menu(self, mt, opts):
         """ displays a menu
         """
         demos = ["make foo", "do bar", "baz everything"]
@@ -259,7 +260,7 @@ class Runner(object):
             else:
                 break
 
-    def test_form_dump_def(self, mt, opts):
+    def demo_form_dump_def(self, mt, opts):
         """ generates the JSON representation of a form
         """
         form = Form(mt)
@@ -272,7 +273,7 @@ class Runner(object):
 
         print(form.dump_definition())
 
-    def test_form_load_def(self, mt, opts):
+    def demo_form_load_def(self, mt, opts):
         """ loads a form from its JSON representation and displays it
         """
         form = Form(mt)
@@ -287,10 +288,20 @@ def main():
     if not Image:
         logging.warning('Demo requiring PIL Python library will not work.')
 
-    parser = argparse.ArgumentParser()
+    class DemoArgumentParser(argparse.ArgumentParser):
+        def print_help(self, file=None):
+            super(DemoArgumentParser, self).print_help(file)
+            self.print_demo_list()
+
+        def print_demo_list(self):
+            print('\nAvailable demos :')
+            for name, descr in Runner.get_demos_list():
+                print("  %-21s %s" % (name, descr))
+
+    parser = DemoArgumentParser(description="A collection of demos of the Minitel library.")
     parser.add_argument(
-        'test_name',
-        help="the name of the test to be done (use '?' for the list)"
+        'demo_name',
+        help="the name of the demo to be executed"
     )
     parser.add_argument(
         '-p', '--port',
@@ -310,23 +321,22 @@ def main():
         action='store_true'
     )
     parser.add_argument(
-        'test_opts',
+        'demo_opts',
         nargs='*',
-        help='test specific options'
+        help='demo specific options'
     )
+
+    if len(sys.argv) < 2:
+        parser.print_usage()
+        parser.print_demo_list()
+        parser.exit(status=2)
 
     args = parser.parse_args()
 
-    if args.test_name == '?':
-        print('Available tests :')
-        for name, descr in Runner.get_tests_list():
-            print("- %-20s %s" % (name, descr))
-
-    else:
-        try:
-            Runner(args).run_test(args.test_name, args.test_opts)
-        except NoSuchTestError as e:
-            print('[ERROR] no such test : ' + e.message)
+    try:
+        Runner(args).run_demo(args.demo_name, args.demo_opts)
+    except NoSuchDemoError as e:
+        parser.exit(2, '[ERROR] no such demo (%s)\n' % e.message)
 
 if __name__ == '__main__':
     main()
