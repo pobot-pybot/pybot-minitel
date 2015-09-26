@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='pybot_minitel',
+setup(name='pybot-minitel',
       namespace_packages=['pybot'],
       version='1.0',
       description='Minitel library',
@@ -23,14 +23,15 @@ setup(name='pybot_minitel',
       author='Eric Pascual',
       author_email='eric@pobot.org',
       url='http://www.pobot.org',
+      install_requires=['pybot-core'],
       packages=find_packages("src"),
       package_dir={'': 'src'},
       package_data={
-          'pybot_minitel': ['demos/data/form_def.json', 'demos/data/img/*.png', 'demos/data/img/*.txt']
+          'pybot.minitel': ['demos/data/form_def.json', 'demos/data/img/*.png', 'demos/data/img/*.txt']
       },
       entry_points={
           'console_scripts': [
-              'pybot_minitel_demo = pybot_minitel.demos:main'
+              'pybot_minitel_demo = pybot.minitel.demos:main'
           ]
       }
 )
