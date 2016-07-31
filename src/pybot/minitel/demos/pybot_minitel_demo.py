@@ -105,7 +105,7 @@ class Runner(object):
             logging.error('This demo requires the PIL library')
             return
 
-        mt.clear_screen()
+        mt.clear_window()
         for img_name in (n for n in os.listdir(self.images_dir) if n.endswith('.png')):
             img = Image.open(os.path.join(self.images_dir, img_name))
             vt_img = VideotexImage(img)
@@ -120,7 +120,7 @@ class Runner(object):
     def demo_asciiart(self, mt, opts):
         """ loads and display an ASCII art image
         """
-        mt.clear_screen()
+        mt.clear_window()
         with file(os.path.join(self.images_dir, 'youpi-ascii.txt'), 'rt') as fp:
             lines = fp.readlines()
             img = AsciiArtImage(lines)
