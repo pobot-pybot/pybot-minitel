@@ -61,3 +61,4 @@ target/
 .idea
 _build
 scripts/image.vt
+fabfile.py
