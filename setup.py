@@ -1,11 +1,11 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
 
 setup(name='pybot-minitel',
       namespace_packages=['pybot'],
-      version='1.0',
+      setup_requires=['setuptools_scm'],
+      use_scm_version=True,
       description='Minitel library',
       classifiers=[
           'Development Status :: 4 - Beta',
