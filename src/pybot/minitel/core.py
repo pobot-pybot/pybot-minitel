@@ -5,6 +5,7 @@
 
 import time
 import logging
+import threading
 
 import serial
 
@@ -48,6 +49,8 @@ class Minitel(object):
     mode = None
     _in_vt_mode = None
     _vt_graphics = None
+
+    _terminate_event = threading.Event()
 
     def __init__(self, port=None, baud=4800, debug=False):
         """ The serial port to be used can be either a string such as ``/dev/ttyUSB0``
@@ -145,6 +148,11 @@ class Minitel(object):
         Should be invoked only when the instance is no more needed.
         """
         self.ser.close()
+
+    def shutdown(self):
+        """ Stops pending inputs and closes the communication."""
+        self._terminate_event.set()
+        self.close()
 
     def send(self, data):
         """ Sends data to the Minitel.
@@ -495,6 +503,9 @@ class Minitel(object):
         # handle user typed keys
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
+            if self._terminate_event.is_set:
+                return
+
             c = self.receive()
             if c:
                 if c == SEP:
@@ -584,6 +595,9 @@ class Minitel(object):
         self.ser.flushInput()
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
+            if self._terminate_event.is_set:
+                return
+
             c = self.receive()
             if c:
                 if c == SEP:
