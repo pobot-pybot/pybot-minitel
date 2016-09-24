@@ -13,10 +13,12 @@ class Menu(object):
     The input is checked against the list of selectable options, the
     menu staying displayed until a valid one is entered.
 
-    Canceling is possible by using the SOMMAIRE (content) key.
+    Canceling is possible by using the SOMMAIRE (content) key, unless `cancelable`
+    is set to False.
     """
     def __init__(self, mt, title, choices,
-                 prompt=None, line_skip=0, margin_top=0, prompt_line=None, addit=None
+                 prompt=None, line_skip=0, margin_top=0, prompt_line=None, addit=None,
+                 cancelable=True
                  ):
         """
         Parameters:
@@ -28,6 +30,8 @@ class Menu(object):
             margin_top (int): vertical space before the menu title. Default: 0
             prompt_line (int): line number on which the input prompt is displayed
             addit (list of tuple): additional prompts as a list of (x, y, text) tuples
+            cancelable (bool): if True, the cancel key (SOMMAIRE) can be used, and `get_choice` will exit
+            and return None. If False, the cancel key will be treated as an invalid choice.
         """
         if not mt:
             raise ValueError('mt parameter is mandatory')
@@ -77,8 +81,9 @@ class Menu(object):
         self._mt = mt
         self._form = form
         self._choice_max = choice_max
+        self._cancelable = cancelable
 
-    def get_choice(self, max_wait=None, cancelable=True):
+    def get_choice(self, max_wait=None):
         """ Waits for the user input and returns it.
 
         The entered value is checked against the number of options, and rejected if not valid.
@@ -87,8 +92,6 @@ class Menu(object):
 
         Parameters:
             max_wait (int): maximum wait time in seconds for selecting an option (if None, waits indefinitely)
-            cancelable (bool); if True, the cancel key (SOMMAIRE) can be used, and the method will exit
-            and return None. If False, cancel key use is treated as an invalid choice.
         Returns:
             the option number (starting from 1) or None if input has been canceled
         """
@@ -106,7 +109,7 @@ class Menu(object):
                     return choice
 
             else:
-                if cancelable:
+                if self._cancelable:
                     return None
                 else:
                     self._mt.beep()
