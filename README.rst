@@ -48,6 +48,23 @@ Installation
     $ python setup.py sdist
     $ pip install dist/*.tar.gz
 
+Dependencies
+============
+
+- `pybot-core <https://github.com/pobot-pybot/pybot-core>`_
+
+External
+--------
+
+- pyserial (``pip install pyserial``)
+- Pillow (PIL) (``pip install Pillow``)
+
+JPEG support in Pillow requires `libjpeg` to be installed, with its dev resources too. Achieved with :
+
+::
+
+  $ sudo apt-get install libjpeg9 libjpeg9-dev
+
 Documentation
 =============
 
