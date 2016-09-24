@@ -62,3 +62,6 @@ target/
 _build
 scripts/image.vt
 fabfile.py
+assets
+gredit
+.fab_tasks*
