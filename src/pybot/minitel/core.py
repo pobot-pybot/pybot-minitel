@@ -503,7 +503,7 @@ class Minitel(object):
         # handle user typed keys
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
-            if self._terminate_event.is_set:
+            if self._terminate_event.is_set():
                 return
 
             c = self.receive()
@@ -595,7 +595,7 @@ class Minitel(object):
         self.ser.flushInput()
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
-            if self._terminate_event.is_set:
+            if self._terminate_event.is_set():
                 return
 
             c = self.receive()
