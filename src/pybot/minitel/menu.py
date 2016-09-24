@@ -44,6 +44,8 @@ class Menu(object):
         if not prompt:
             prompt = "Your choice"
 
+        addit = addit or []
+
         choice_max = len(choices)
         prompt = "%s [1..%d] : " % (prompt, choice_max)
         prompt_text = prompt + ('..' if choice_max > 9 else '.') + " + ENVOI"
