@@ -8,12 +8,13 @@ import logging
 import threading
 
 import serial
+from serial.serialutil import SerialException
 
 from .sequences import Protocol, TeleinfoCommand, TextAttribute, GET_POS, VideotexMode
 from .identification import DeviceSpecs
 from .constants import *
 
-__all__ = ('Minitel', 'Part')
+__all__ = ('Minitel', 'Part', 'DeviceCommunicationError')
 
 log = logging.getLogger('minitel')
 log.addHandler(logging.NullHandler())
@@ -509,7 +510,7 @@ class Minitel(object):
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
             if self._terminate_event.is_set():
-                return
+                return None, None
 
             c = self.receive()
             if c:
@@ -800,3 +801,7 @@ class Minitel(object):
         """ Flushes the serial link (output direction).
         """
         self.ser.flush()
+
+
+#: Error while communicating with the device
+DeviceCommunicationError = SerialException
