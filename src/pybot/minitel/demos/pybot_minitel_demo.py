@@ -120,7 +120,7 @@ class Runner(object):
     def demo_asciiart(self, mt, opts):
         """ loads and display an ASCII art image
         """
-        mt.clear_window()
+        mt.clear_all()
         with file(os.path.join(self.images_dir, 'youpi-ascii.txt'), 'rt') as fp:
             lines = fp.readlines()
             img = AsciiArtImage(lines)
