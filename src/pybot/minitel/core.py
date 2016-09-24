@@ -149,9 +149,14 @@ class Minitel(object):
         """
         self.ser.close()
 
+    def interrupt(self):
+        """ Interrupts pending input wait if any."""
+        self._terminate_event.set()
+
     def shutdown(self):
         """ Stops pending inputs and closes the communication."""
-        self._terminate_event.set()
+        self.interrupt()
+        time.sleep(1)
         self.close()
 
     def send(self, data):
