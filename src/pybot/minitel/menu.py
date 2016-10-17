@@ -98,9 +98,6 @@ class Menu(object):
         self._form.render()
         while True:
             content = self._form.input(max_wait=max_wait)
-            if self._mt.terminating:
-                return None
-
             if content:
                 try:
                     choice = int(content['choice'])

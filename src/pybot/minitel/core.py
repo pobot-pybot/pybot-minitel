@@ -187,7 +187,13 @@ class Minitel(object):
 
         Returns:
             str: the received bytes
+
+        Raises:
+            KeyboardInterrupt: if we are interrupted by an external signal (kinda Ctrl-C)
         """
+        if self.terminating:
+            raise KeyboardInterrupt()
+
         data = self.ser.read(count)
         if data:
             log_rx.debug(dump(data))
@@ -513,9 +519,6 @@ class Minitel(object):
         # handle user typed keys
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
-            if self._terminate_event.is_set():
-                return None, None
-
             c = self.receive()
             if c:
                 if c == SEP:
@@ -605,9 +608,6 @@ class Minitel(object):
         self.ser.flushInput()
         limit = time.time() + (max_wait if max_wait else float('inf'))
         while time.time() < limit:
-            if self._terminate_event.is_set():
-                return
-
             c = self.receive()
             if c:
                 if c == SEP:
