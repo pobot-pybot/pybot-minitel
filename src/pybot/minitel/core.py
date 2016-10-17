@@ -154,6 +154,10 @@ class Minitel(object):
         """ Interrupts pending input wait if any."""
         self._terminate_event.set()
 
+    @property
+    def terminating(self):
+        return self._terminate_event.isSet()
+
     def shutdown(self):
         """ Stops pending inputs and closes the communication."""
         self.interrupt()
